@@ -1,0 +1,26 @@
+{
+    "kind": "Service",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "goggles",
+        "namespace": "default",
+        "labels": {
+            "run": "goggles"
+        }
+    },
+    "spec": {
+        "ports": [
+            {
+                "protocol": "TCP",
+                "port": 80,
+                "targetPort": 3000,
+                "nodePort": 0
+            }
+        ],
+        "selector": {
+            "run": "goggles"
+        },
+        "type": "ClusterIP",
+        "sessionAffinity": "None"
+    }
+}

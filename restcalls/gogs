@@ -1,0 +1,45 @@
+{
+  "kind":"Pod",
+  "apiVersion":"v1",
+  "metadata": {
+    "generateName": "goggles-",
+    "namespace": "default",
+    "labels": {
+        "run": "goggles"
+    }
+  },
+  "spec": {
+    "volumes": [
+      {
+        "name": "default-token-xc8aa",
+        "secret": {
+          "secretName": "default-token-xc8aa"
+        }
+      }
+    ],
+    "containers": [
+      {
+        "name": "gogs",
+        "image": "gogs/gogs",
+        "resources": {
+          "limits": {
+            "cpu": "100m"
+          }
+        },
+        "volumeMounts": [
+          {
+            "name": "default-token-xc8aa",
+            "readOnly": true,
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
+          }
+        ],
+        "terminationMessagePath": "/dev/termination-log",
+        "imagePullPolicy": "IfNotPresent"
+      }
+    ],
+    "restartPolicy": "Always",
+    "dnsPolicy": "ClusterFirst",
+    "serviceAccountName": "default",
+    "serviceAccount": "default"
+  }
+}
