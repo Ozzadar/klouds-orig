@@ -74,7 +74,7 @@ func (this *LaunchController) activeContent(view string) {
 
     fileselect = fileselect + "</select>"
 
- 
+
 
 	this.TplNames = view + ".tpl"
     this.Data["FileSelect"] = fileselect
@@ -113,26 +113,44 @@ func (this *LaunchController) Post() {
 	this.activeContent("appLaunch")
 
 	file := this.GetString("filelist")
+	fileservice := file + "-service"
 
-	thethings, err := ioutil.ReadFile("./restcalls/" + file)
+	podfile, err := ioutil.ReadFile("./restcalls/" + file)
 
 	if err != nil {
 		panic(err)
 	}
 	url := "http://localhost:8001/api/v1/namespaces/default/pods"
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(thethings))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(podfile))
 
 	res, err := http.DefaultClient.Do(req)
 
 	if err != nil {
-        panic(err) //Something is wrong while sending request
-    }
+      panic(err) //Something is wrong while sending request
+  }
 
-    if res.StatusCode != 201 {
-        fmt.Printf("Success expected: %d", res.StatusCode) //Uh-oh this means our test failed
-    }
+  if res.StatusCode != 201 {
+      fmt.Printf("Success expected: %d", res.StatusCode) //Uh-oh this means our test failed
+  }
 
-    fmt.Println(res.StatusCode)
+  fmt.Println("Pods status code: ",res.StatusCode)
+
+	servicefile, err := ioutil.ReadFile("./restcalls/" + fileservice)
+
+	if err != nil {
+		panic(err)
+	}
+
+	url = "http://localhost:8001/api/v1/namespaces/default/services"
+	req, err = http.NewRequest("POST", url, bytes.NewBuffer(servicefile))
+
+	res, err = http.DefaultClient.Do(req)
+
+	if err != nil {
+			panic(err) //Something is wrong while sending request
+	}
+
+	fmt.Println("Service status code: ", res.StatusCode)
 
 	flash := beego.ReadFromRequest(&this.Controller)
 	if n, ok := flash.Data["notice"]; ok {
