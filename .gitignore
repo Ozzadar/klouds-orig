@@ -1,0 +1,3 @@
+# tells git which files to stay the hell away from.  In this case, the binaries built at compile time, and the application's configuration.  In order to preserve repository user access to a .conf file, I made an app.example.conf, too.  
+klouds
+conf/app.conf
