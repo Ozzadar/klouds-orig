@@ -1,6 +1,6 @@
 # Klouds.io / Klouds.org
 
-[![Join the chat at https://gitter.im/Superordinate/klouds](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Superordinate/klouds?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/Superordinate/klouds](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Superordinate/klouds?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![Code Climate](https://codeclimate.com/github/Superordinate/klouds/badges/gpa.svg)](https://codeclimate.com/github/Superordinate/klouds)
 
 ![Image of Klouds]
 (http://www.ozzadar.com/klouds.png)
