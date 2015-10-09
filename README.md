@@ -1,7 +1,7 @@
 # Klouds.io / Klouds.org
 
 ![Image of Klouds]
-(http//www.ozzadar.com/klouds.png)
+(http://www.ozzadar.com/klouds.png)
 A web framework for dynamically launching and accessing web servers.
 
 Uses rest APIs to manage containers.
