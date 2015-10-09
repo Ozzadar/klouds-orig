@@ -17,6 +17,14 @@
 <form method="POST">
 <table>
 <tr>
+    <td>
+        Username : 
+    </td>
+    <td>
+        {{.Username}}
+    </td>
+</tr>
+<tr>
     <td>First name:</td>
     <td><input name="first" type="text" value="{{.First}}" /></td>
 </tr>
@@ -47,6 +55,26 @@
 <tr>
     <td>&nbsp;</td><td><input type="submit" value="Update" /></td>
 </tr>
+</table>
+
+<table>
+    <tr>
+        <td></td>
+        <td>
+            <h1>APPLICATION LIST</h1>
+        </td>
+        <td></td>
+    </tr>    
+    <tr>
+        <td>Application name<br>
+        -------------------</td>
+        <td>Application link<br>
+            -------------------
+        </td>
+        <td>DELETE APPLICATION<br>
+        -------------------</td>
+    </tr>
+    {{str2html .AppList}}
 </table>
 <a href="../../user/remove">Remove account</a>
 </form>

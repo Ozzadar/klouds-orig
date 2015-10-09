@@ -13,6 +13,7 @@ func init() {
 	beego.Router("/user/logout", &controllers.MainController{}, "get:Logout")
 	beego.Router("/user/register", &controllers.MainController{}, "get,post:Register")
 	beego.Router("/user/profile", &controllers.MainController{}, "get,post:Profile")
+	beego.Router("/deleteApp/:appName", &controllers.DeleteController{})
 	beego.Router("/user/verify/:uuid", &controllers.MainController{}, "get:Verify")
 	beego.Router("/user/remove", &controllers.MainController{}, "get,post:Remove")
 	beego.Router("/notice", &controllers.MainController{}, "get:Notice")

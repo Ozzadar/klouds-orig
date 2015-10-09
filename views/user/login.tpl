@@ -14,8 +14,8 @@
 <form method="POST">
 <table>
 <tr>
-    <td>Email address:</td>
-    <td><input name="email" type="text" autofocus /></td>
+    <td>Username:</td>
+    <td><input name="username" type="text" autofocus /></td>
 </tr>
 <tr>      
     <td>Password:</td>

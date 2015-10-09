@@ -22,6 +22,10 @@
     <td><input name="last" type="text" /></td>
 </tr>
 <tr>
+    <td>Username:</td>
+    <td><input name="username" type="text" /></td>
+</tr>
+<tr>
     <td>Email address:</td>
     <td><input name="email" type="text" /></td>
 </tr>

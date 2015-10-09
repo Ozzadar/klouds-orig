@@ -11,7 +11,10 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/twinj/uuid"
 	"strings"
+	"net/http"
+	"io/ioutil"
 	"time"
+	//"bytes"
 )
 
 func (this *MainController) Login() {
@@ -21,11 +24,13 @@ func (this *MainController) Login() {
 	fmt.Println("back is", back)
 	if this.Ctx.Input.Method() == "POST" {
 		flash := beego.NewFlash()
-		email := this.GetString("email")
+		username:= this.GetString("username")
+		
 		password := this.GetString("password")
 		valid := validation.Validation{}
-		valid.Email(email, "email")
+		
 		valid.Required(password, "password")
+
 		if valid.HasErrors() {
 			errormap := []string{}
 			for _, err := range valid.Errors {
@@ -34,7 +39,7 @@ func (this *MainController) Login() {
 			this.Data["Errors"] = errormap
 			return
 		}
-		fmt.Println("Authorization is", email, ":", password)
+		fmt.Println("Authorization is", username, ":", password)
 
 		//******** Read password hash from database
 		var x pk.PasswordHash
@@ -44,8 +49,8 @@ func (this *MainController) Login() {
 
 		o := orm.NewOrm()
 		o.Using("default")
-		user := models.AuthUser{Email: email}
-		err := o.Read(&user, "Email")
+		user := models.AuthUser{Username: username}
+		err := o.Read(&user, "username")
 		if err == nil {
 			if user.Reg_key != "" {
 				flash.Error("Account not verified")
@@ -63,7 +68,7 @@ func (this *MainController) Login() {
 			}
 			fmt.Println("decoded password is", x)
 		} else {
-			flash.Error("No such user/email")
+			flash.Error("No such user")
 			flash.Store(&this.Controller)
 			return
 		}
@@ -78,7 +83,7 @@ func (this *MainController) Login() {
 		//******** Create session and go back to previous page
 		m := make(map[string]interface{})
 		m["first"] = user.First
-		m["username"] = email
+		m["username"] = username
 		m["timestamp"] = time.Now()
 		this.SetSession("acme", m)
 		this.Redirect("/"+back, 302)
@@ -99,8 +104,10 @@ func (this *MainController) Register() {
 		first := this.GetString("first")
 		last := this.GetString("last")
 		email := this.GetString("email")
+		username := this.GetString("username")
 		password := this.GetString("password")
 		password2 := this.GetString("password2")
+
 		valid := validation.Validation{}
 		valid.Required(first, "first")
 		valid.Email(email, "email")
@@ -125,7 +132,7 @@ func (this *MainController) Register() {
 		o := orm.NewOrm()
 		o.Using("default")
 
-		user := models.AuthUser{First: first, Last: last, Email: email}
+		user := models.AuthUser{First: first, Last: last, Username: username, Email: email}
 
 		// Convert password hash to string
 		user.Password = hex.EncodeToString(h.Hash) + hex.EncodeToString(h.Salt)
@@ -206,8 +213,8 @@ func (this *MainController) Profile() {
 
 	o := orm.NewOrm()
 	o.Using("default")
-	user := models.AuthUser{Email: m["username"].(string)}
-	err := o.Read(&user, "Email")
+	user := models.AuthUser{Username: m["username"].(string)}
+	err := o.Read(&user, "Username")
 	if err == nil {
 		// scan in the password hash/salt
 		if x.Hash, err = hex.DecodeString(user.Password[:64]); err != nil {
@@ -222,16 +229,73 @@ func (this *MainController) Profile() {
 		return
 	}
 
+	// Create an applist
+
+	//Get all running apps
+	url := "http://107.167.184.225:8080/v2/apps/"
+	//bytestring := []byte(newstring)
+	req, err := http.NewRequest("GET", url, nil)
+
+	if err != nil {
+		panic(err)
+	}
+
+	//Make the request
+	res, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+    	panic(err) //Something is wrong while sending request
+ 	}
+
+	body, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		panic(err)
+	}
+
+	JSONSPLIT := strings.Split(string(body), strings.ToLower(user.Username))
+	numberOfApps := len(JSONSPLIT) - 1
+	//this.Data["AppList"] = string(body)
+	appNames := make([]string, numberOfApps)
+
+	fmt.Println("Number of apps for user: ", len(JSONSPLIT) - 1)
+
+	for i:=1; i<len(JSONSPLIT); i++ {
+		JSONBYTES := []byte(JSONSPLIT[i])
+
+		appNames[i-1] = strings.ToLower(user.Username)
+		
+		for j:=0; j<len(JSONBYTES);j++ {
+			if JSONBYTES[j] == '"' {
+				break;
+			}
+			appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
+		}
+		fmt.Println(appNames[i-1])
+	}
+
+	formstring :=""
+
+	for i:=0;i<len(appNames);i++ {
+		formstring = formstring + "<tr><td>" + appNames[i] + "</td>"
+		formstring = formstring + "<td><a href='http://" + appNames[i] + ".klouds.org' target='_blank'> GO TO SITE</a></td>"
+		formstring = formstring + "<td><a href='../deleteApp/"+ appNames[i] + "'> DELETE APP </a></td>"
+	}
+	formstring = formstring + "</tr></table>"
+	this.Data["AppList"] = formstring
+
 	// this deferred function ensures that the correct fields from the database are displayed
 	defer func(this *MainController, user *models.AuthUser) {
 		this.Data["First"] = user.First
 		this.Data["Last"] = user.Last
+		this.Data["Username"] = user.Username
 		this.Data["Email"] = user.Email
 	}(this, &user)
 
 	if this.Ctx.Input.Method() == "POST" {
 		first := this.GetString("first")
 		last := this.GetString("last")
+		username := this.GetString("username")
 		email := this.GetString("email")
 		current := this.GetString("current")
 		password := this.GetString("password")
@@ -240,6 +304,7 @@ func (this *MainController) Profile() {
 		valid.Required(first, "first")
 		valid.Email(email, "email")
 		valid.Required(current, "current")
+
 		if valid.HasErrors() {
 			errormap := []string{}
 			for _, err := range valid.Errors {
@@ -282,6 +347,7 @@ func (this *MainController) Profile() {
 		//******** Save user info to database
 		user.First = first
 		user.Last = last
+		user.Username = username
 		user.Email = email
 
 		_, err := o.Update(&user)
@@ -331,8 +397,8 @@ func (this *MainController) Remove() {
 
 		o := orm.NewOrm()
 		o.Using("default")
-		user := models.AuthUser{Email: m["username"].(string)}
-		err := o.Read(&user, "Email")
+		user := models.AuthUser{Username: m["username"].(string)}
+		err := o.Read(&user, "Username")
 		if err == nil {
 			// scan in the password hash/salt
 			if x.Hash, err = hex.DecodeString(user.Password[:64]); err != nil {

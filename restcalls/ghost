@@ -1,0 +1,25 @@
+14{
+    "id":"ghost",
+    "cpus": 0.01,
+    "mem": 50.0,
+    "instances": 1,
+    "container": {
+      "type": "DOCKER",
+      "docker": {
+        "image": "ghost",
+        "network": "BRIDGE",
+        "volumes": {
+            "containerPath": "/var/lib/ghost",
+            "mode": "RW"
+        },
+        "portMappings": [
+          {
+            "containerPort": 2368
+          }
+        ],
+        "privileged": true,
+        "parameters": [],
+        "forcePullImage": false
+      }
+    }
+}

@@ -1,0 +1,21 @@
+14{
+    "id":"minecraft",
+    "cpus": 1,
+    "mem": 1000.0,
+    "instances": 1,
+    "container": {
+      "type": "DOCKER",
+      "docker": {
+        "image": "kitematic/minecraft",
+        "network": "BRIDGE",
+        "portMappings": [
+          {
+            "containerPort": 25565
+          }
+        ],
+        "privileged": true,
+        "parameters": [],
+        "forcePullImage": true
+      }
+    }
+}

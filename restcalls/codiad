@@ -1,0 +1,25 @@
+14{
+    "id":"codiad",
+    "cpus": 0.01,
+    "mem": 100.0,
+    "instances": 1,
+    "container": {
+      "type": "DOCKER",
+      "docker": {
+        "image": "quantumobject/docker-codiad",
+        "network": "BRIDGE",
+         "volumes": {
+            "containerPath": "/opt/codiad/workspace/project1",
+            "mode": "RW"
+        },
+        "portMappings": [
+          {
+            "containerPort": 80
+          }
+        ],
+        "privileged": true,
+        "parameters": [],
+        "forcePullImage": true
+      }
+    }
+}
