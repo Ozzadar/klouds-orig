@@ -104,7 +104,7 @@ func (this *MainController) Register() {
 		first := this.GetString("first")
 		last := this.GetString("last")
 		email := this.GetString("email")
-		username := this.GetString("username")
+		username := strings.ToLower(this.GetString("username"))
 		password := this.GetString("password")
 		password2 := this.GetString("password2")
 
