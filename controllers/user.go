@@ -24,7 +24,7 @@ func (this *MainController) Login() {
 	fmt.Println("back is", back)
 	if this.Ctx.Input.Method() == "POST" {
 		flash := beego.NewFlash()
-		username:= this.GetString("username")
+		username:= strings.ToLower(this.GetString("username"))
 		
 		password := this.GetString("password")
 		valid := validation.Validation{}
@@ -295,12 +295,13 @@ func (this *MainController) Profile() {
 	if this.Ctx.Input.Method() == "POST" {
 		first := this.GetString("first")
 		last := this.GetString("last")
-		username := this.GetString("username")
+		username := strings.ToLower(this.GetString("username"))
 		email := this.GetString("email")
 		current := this.GetString("current")
 		password := this.GetString("password")
 		password2 := this.GetString("password2")
 		valid := validation.Validation{}
+
 		valid.Required(first, "first")
 		valid.Email(email, "email")
 		valid.Required(current, "current")
@@ -354,7 +355,7 @@ func (this *MainController) Profile() {
 		if err == nil {
 			flash.Notice("Profile updated")
 			flash.Store(&this.Controller)
-			m["username"] = email
+			m["username"] = username
 		} else {
 			flash.Error("Internal error")
 			flash.Store(&this.Controller)
