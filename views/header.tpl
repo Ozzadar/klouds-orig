@@ -20,9 +20,6 @@
 		{{end}}
 		</div>
 
-	<!--	<div id="logo">
-			<img src="../../static/img/img03.png"></img>
-		</div> -->
 		<div id="menu">
 			<ul>
 				<li class="active"><a href="/home">home</a></li>

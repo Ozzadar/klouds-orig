@@ -35,7 +35,8 @@
                     </td>
                     <td>DELETE APPLICATION<br>
                     ----------------</td>
-                </tr>   
+                </tr>
+                {{str2html .AppList}}   
             </table>
         </div>
         <div class="boxB">

@@ -11,8 +11,8 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/twinj/uuid"
 	"strings"
-	//"net/http"
-	//"io/ioutil"
+	"net/http"
+	"io/ioutil"
 	"time"
 	//"bytes"
 )
@@ -228,11 +228,11 @@ func (this *MainController) Profile() {
 		flash.Store(&this.Controller)
 		return
 	}
-/*
+
 	// Create an applist
 
 	//Get all running apps
-	url := "http://107.167.184.225:8080/v2/apps/"
+	url := "http://104.199.142.217:8080/v2/apps/"
 	//bytestring := []byte(newstring)
 	req, err := http.NewRequest("GET", url, nil)
 
@@ -283,7 +283,7 @@ func (this *MainController) Profile() {
 	}
 	formstring = formstring + "</tr></table>"
 	this.Data["AppList"] = formstring
-*/
+
 	// this deferred function ensures that the correct fields from the database are displayed
 	defer func(this *MainController, user *models.AuthUser) {
 		this.Data["First"] = user.First

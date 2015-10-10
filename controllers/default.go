@@ -180,7 +180,7 @@ func (this *LaunchController) Post() {
 		fmt.Println(newstring)
 
 		//Create the request
-		url := "http://107.167.184.225:8080/v2/apps"
+		url := "http://104.199.142.217:8080/v2/apps"
 		bytestring := []byte(newstring)
 		req, err := http.NewRequest("POST", url, bytes.NewBuffer(bytestring))
 
@@ -197,7 +197,7 @@ func (this *LaunchController) Post() {
 
 
 	  	this.Data["Launching"] = "Launching successful! Redirecting in 2s ..."
-	  	time.Sleep(2 * time.Second)
+	  	time.Sleep(5 * time.Second)
 	  	this.Redirect("/user/profile", 302)
 
 	}
@@ -241,7 +241,7 @@ func (this *DeleteController) Get() {
 	appName  := this.Ctx.Input.Param(":appName")
 
 	//Create the request
-	url := "http://107.167.184.225:8080/v2/apps/" + string(appName)
+	url := "http://104.199.142.217:8080/v2/apps/" + string(appName)
 
 	req, err := http.NewRequest("DELETE", url, nil)
 
