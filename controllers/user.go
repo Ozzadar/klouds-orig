@@ -159,15 +159,15 @@ func (this *MainController) Register() {
 }
 
 func sendVerification(email, u string) bool {
-	link := "http://118.70.67.125/user/verify/" + u
+	link := "http://klouds.org/user/verify/" + u
 	host := "smtp.gmail.com"
 	port := 587
 	msg := gomail.NewMessage()
-	msg.SetAddressHeader("From", "p.a.mauviel@gmail.com", "ACME Corporation")
+	msg.SetAddressHeader("From", "p.a.mauviel@gmail.com", "Klouds.io")
 	msg.SetHeader("To", email)
-	msg.SetHeader("Subject", "Account Verification for ACME Corporation")
+	msg.SetHeader("Subject", "Account Verification for Klouds.io")
 	msg.SetBody("text/html", "To verify your account, please click on the link: <a href=\""+link+
-		"\">"+link+"</a><br><br>Best Regards,<br>ACME Corporation")
+		"\">"+link+"</a><br><br>Best Regards,<br>Klouds.io team.")
 	m := gomail.NewMailer(host, "p.a.mauviel@gmail.com", "1a2b3c4d5e6F", port)
 	if err := m.Send(msg); err != nil {
 		return false
