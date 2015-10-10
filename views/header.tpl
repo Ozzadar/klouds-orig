@@ -11,23 +11,41 @@
 
 <body>
 <!-- start header -->
-<div id="header-bg">
-	<div id="header">
+<div id="header-wrapper">
+	<div id="header" class="container">
 		<div align="right">{{if .InSession}}
-		Welcome, {{.First}} [<a href="../user/logout">Logout</a>|<a href="../user/profile">Profile</a>]
+		Welcome, {{.First}} [<a href="/user/logout">Logout</a>|]
 		{{else}}
-		[<a href="../login/home">Login</a>]
+		[<a href="/user/login/home">Login</a>]
 		{{end}}
 		</div>
-		<div id="logo">
+
+	<!--	<div id="logo">
 			<img src="../../static/img/img03.png"></img>
-		</div>
+		</div> -->
 		<div id="menu">
 			<ul>
-				<li class="active"><a href="../../home">home</a></li>
-				<li class="active"><a href="../../appLaunch">Launch an App!</a></li>
+				<li class="active"><a href="/home">home</a></li>
+				{{if .InSession}}
+					<li class="active"><a href="/user/profile">Your Account</a></li>
+				{{else}}
+				{{end}}
+				<!-- <li class="active"><a href="/user/profile">Your Applications</a></li> -->
 			</ul>
 		</div>
+		<div id="banner" class="container">
+			<div class="title">
+				<h2>Klouds.io</h2>
+				<span class="byline">Application Hosting Made Easy</span>
+			</div>
+			{{if .InSession}}
+			{{else}}
+				<ul class="actions">
+					<li><a href="/user/login/home" class="button">Get Started</a></li>
+				</ul>
+			{{end}}
+		</div>
+	</div>
 	</div>
 </div>
 <!-- end header -->

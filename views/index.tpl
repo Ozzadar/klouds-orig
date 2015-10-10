@@ -1,32 +1,19 @@
 	<!-- start content -->
-	<div id="content">
-		<div class="post">
+	<div id="welcome">
+		<div class="container">
 			
-			<div class="entry">
-				<p>Klouds.io is a startup company focusing on software as a service platform for open source softwares. Look at it as an app store for open source applications. Running a website is difficult if you are not a developer. Klouds.io offers open-source application hosting through 1-click setup so businesses and entrepreneurs can focus on what they do best. Our mission is to:
-					<ul>
-					<li>
-						Distribute open-source applications to everyone
-					</li>
-					<li>
-						Making open-source the obvious choice by unleashing the awesome hidden open-source apps on github to the public.
-					</li>
-					<li>
-						Giving the open-source app authors the chance to make income from their awesome apps. They will get one-third from the monthly subscription of their app users on our system.
-					</li>
+			<div class="actions">
+				<i><p> Klouds.io is a software hosting platform for:<br>
+					<ul align=left>
+					  <li>- Content creators with specific needs looking for a inexpensive alternative to traditional hosting packages</li>
+					  <li>- Open Source developers looking to distribute and monetize their web facing applications without the overhead of maintaining their own hosting solution</li>
+					  <li>- Business owners looking for inexpensive, customized solutions to budgeting, CRM, communications, etc.
+					  </li>
 					</ul>
+				</p></i><br><br>
+				<p>
+					<strong><i><em>If you are a software developer interested in hosting and monetizing your applications on our platform feel free to contact Jacob Gadikian at <a href="mailto:jake@klouds.org?Subject=[HOSTING]" target="_top">jake@klouds.org</a> or Paul Mauviel at <a href="mailto:ozzadar@ozzadar.com?Subject=[HOSTING]">ozzadar@ozzadar.com </a> </em></i></strong>
 				</p>
-			</div>
-		</div>
-		<div class="post">
-			<h2 class="title">Lorem Ipsum Dolor Volutpat</h2>
-			<div class="entry">
-				<p>Donec a ante. Donec neque purus, adipiscing id, eleifend a, cursus vel, odio. Vivamus varius justo sit amet leo. Morbi sed libero. Vestibulum blandit augue at mi. Praesent fermentum lectus eget diam. Nam cursus, orci sit amet porttitor iaculis, ipsum massa aliquet nulla, non elementum mi elit a mauris. In hac habitasse platea.</p>
-				<p>Curabitur tellus. Phasellus tellus turpis, iaculis in, faucibus lobortis, posuere in, lorem. Donec a ante. Donec neque purus, adipiscing id, eleifend a, cursus vel, odio. Vivamus varius justo sit amet leo. Morbi sed libero. Vestibulum blandit augue at mi. Praesent fermentum lectus eget diam. Nam cursus, orci sit amet porttitor iaculis, ipsum massa aliquet nulla, non elementum mi elit a mauris. In hac habitasse platea.</p>
-			</div>
-			<div class="meta">
-				<p class="byline">Posted on April 18, 2008 byFreeCssTemplates</p>
-				<p class="links"><a href="#" class="more">Read full article</a> <b>|</b> <a href="#" class="comments">Comments (32)</a></p>
 			</div>
 		</div>
 	</div>

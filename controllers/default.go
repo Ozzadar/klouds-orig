@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"github.com/elgs/gostrgen"
-	//"time"
+	"time"
 )
 
 type MainController struct {
@@ -43,15 +43,6 @@ func (this *MainController) activeContent(view string) {
 func (this *MainController) Get() {
 	this.activeContent("index")
 
-	//******** This page requires login
-	sess := this.GetSession("acme")
-	if sess == nil {
-		this.Redirect("/user/login/home", 302)
-		return
-	}
-	m := sess.(map[string]interface{})
-	fmt.Println("username is", m["username"])
-	fmt.Println("logged in at", m["timestamp"])
 }
 
 func (this *MainController) Notice() {
@@ -96,7 +87,7 @@ func (this *LaunchController) activeContent(view string) {
 
 func (this *LaunchController) Get() {
 	this.activeContent("appLaunch")
-
+	this.Data["Launching"] = ""
 	//******** This page requires login
 	sess := this.GetSession("acme")
 	if sess == nil {
@@ -205,9 +196,9 @@ func (this *LaunchController) Post() {
 		}
 
 
-	  	fmt.Println("Deployment status code: ",res.StatusCode)
-
-
+	  	this.Data["Launching"] = "Launching successful! Redirecting in 2s ..."
+	  	time.Sleep(2 * time.Second)
+	  	this.Redirect("/user/profile", 302)
 
 	}
 	flash := beego.ReadFromRequest(&this.Controller)

@@ -12,6 +12,7 @@
 					
 					<button type="submit" form="form1" value="Submit">Submit</button>
 			</div></div>
+			{{.Launching}}
 		</div>
 	</div>
 	<!-- end content -->
