@@ -142,7 +142,7 @@ func (this *MainController) Register() {
 		user.Reg_key = u.String()
 		_, err := o.Insert(&user)
 		if err != nil {
-			flash.Error(email + " already registered")
+			flash.Error(email + " already registered or " + username + " already taken")
 			flash.Store(&this.Controller)
 			return
 		}
