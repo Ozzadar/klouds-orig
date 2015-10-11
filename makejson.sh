@@ -30,6 +30,5 @@ cat > router.json <<EOF
       "timeoutSeconds": 10,
       "maxConsecutiveFailures": 2
   }],
-  "env": {"APP_NAME": "$APP_NAME"}
 }
 EOF
