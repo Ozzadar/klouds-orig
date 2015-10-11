@@ -11,7 +11,7 @@
 
 A web framework for dynamically launching and accessing web servers.
 
-Uses rest APIs to manage containers.
+Uses rest APIs to manage containers. Uses wercker to automate deployment.  (maybe)
 
 
 Traefik to handle container routing for front facing web services.
