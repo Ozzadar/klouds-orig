@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/superordinate/klouds/models"
-	pk "code.google.com/p/go.crypto/pbkdf2"
+	pk "github.com/superordinate/klouds/utilities/pbkdf2"
 	"encoding/hex"
 	"fmt"
 	"github.com/alexcesaro/mail/gomail"
