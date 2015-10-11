@@ -1,6 +1,8 @@
 # Klouds.io / Klouds.org
 
-[![Join the chat at https://gitter.im/Superordinate/klouds](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Superordinate/klouds?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![Code Climate](https://codeclimate.com/github/Superordinate/klouds/badges/gpa.svg)](https://codeclimate.com/github/Superordinate/klouds)
+###We like to leverage automation:
+
+[![wercker status](https://app.wercker.com/status/009360a006f357d174257e6d039b693b/m "wercker status")](https://app.wercker.com/project/bykey/009360a006f357d174257e6d039b693b)  [![Join the chat at https://gitter.im/Superordinate/klouds](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Superordinate/klouds?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![Code Climate](https://codeclimate.com/github/Superordinate/klouds/badges/gpa.svg)](https://codeclimate.com/github/Superordinate/klouds)  
 
 
 <img src="http://www.ozzadar.com/klouds.png" align="center"/>
