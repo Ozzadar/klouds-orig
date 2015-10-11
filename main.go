@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "./models"
+	_ "github.com/superordinate/klouds/models"
 	_ "./routers"
 	"fmt"
 	"github.com/astaxie/beego"
