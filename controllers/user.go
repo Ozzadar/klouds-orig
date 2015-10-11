@@ -168,7 +168,7 @@ func sendVerification(email, u string) bool {
 	msg.SetHeader("Subject", "Account Verification for Klouds.io")
 	msg.SetBody("text/html", "To verify your account, please click on the link: <a href=\""+link+
 		"\">"+link+"</a><br><br>Best Regards,<br>Klouds.io team.")
-	m := gomail.NewMailer(host, "postmaster@klouds.org", "cc16dd1e1f2e5e141f4fe0fb4790b7e1", port)
+	m := gomail.NewMailer(host, "$EMAIL", "$EMAIL_KEY", port)
 	if err := m.Send(msg); err != nil {
 		return false
 	}
