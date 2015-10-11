@@ -1,7 +1,7 @@
 #!/bin/bash
-cat > router.json <<EOF
+cat > klouds-ui.json <<EOF
 {
-  "id": "/edgerouter",
+  "id": "/klouds-ui",
   "cpus": 1,
   "mem": 256,
   "instances": 1,
