@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/superordinate/klouds/controllers"
 	"github.com/astaxie/beego"
+	"code.google.com/p/go.crypto/pbkdf2"
 )
 
 func init() {
