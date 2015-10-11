@@ -43,3 +43,21 @@ build:
         name: go test
         code: |
           go test ./...
+          
+deploy:
+  dockerhub:
+    - internal/docker-push:
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
+        repository: $APP_IMAGE
+        cmd: "/pipeline/source/app"
+        ports: "$CONTAINER_PORT"
+  marathon:
+    - script:
+        name: generate json
+        code: chmod +x makejson.sh && ./makejson.sh
+    - wercker/marathon-deploy:
+        marathon-url: $MARATHON_ENDPOINT
+        app-name: $APP_NAME
+        app-json-file: $APP_NAME.json
+        instances: "$INSTANCES"
