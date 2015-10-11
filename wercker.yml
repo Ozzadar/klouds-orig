@@ -26,11 +26,11 @@ build:
     # at the right place in the workspace tree
     - setup-go-workspace
 
-    # Gets the dependencies
-    - script:
-        name: go get
-        code: |
-          go get
+    # Gets the dependencies  (bring this back if needed, testing without)
+ #   - script:
+ #       name: go get
+ #       code: |
+ #         go get
 
     # Build the project
     - script:
