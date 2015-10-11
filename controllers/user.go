@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"../models"
+	"github.com/superordinate/klouds/models"
 	pk "../utilities/pbkdf2"
 	"encoding/hex"
 	"fmt"
