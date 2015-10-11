@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"../controllers"
+	"github.com/superordinate/klouds/controllers"
 	"github.com/astaxie/beego"
 )
 
