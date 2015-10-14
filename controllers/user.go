@@ -110,6 +110,18 @@ func (this *MainController) Register() {
 		password := this.GetString("password")
 		password2 := this.GetString("password2")
 
+
+		//Check username for special characters
+		f := func(r rune) bool {
+        	return (r < 'A'  || r > 'Z') && (r < 'a' || r > 'z')  && (r < '0' || r > '9') && r != '-'
+    	}
+
+		if strings.IndexFunc(username, f) != -1 {
+        	flash.Error(username + " contains special characters. Only A-Z a-z 0-9 and '-' allowed!")
+			flash.Store(&this.Controller)
+			return
+    	}
+
 		valid := validation.Validation{}
 		valid.Required(first, "first")
 		valid.Email(email, "email")
