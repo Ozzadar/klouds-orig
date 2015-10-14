@@ -26,8 +26,23 @@ POSTMASTER_KEY= password				<-- email for your mail server
 
 All emails sent through port 2525 at the moment. Google containers block sending mail on default ports to prevent spammers. Works with MailGun.
 
+###To build:
+
+Dependencies:
+Mercurial
+
+```
+	apt-get install mercurial
+	go get .
+	go build .
+
+```
+
+### To Run
+
 ``` 
-	POSTMASTER=postmaster@yourdomain.com POSTMASTER_KEY=password MARATHON_ENDPOINT=192.168.3.4:8080 go run main.go
+	POSTMASTER=postmaster@yourdomain.com POSTMASTER_KEY=password MARATHON_ENDPOINT=192.168.3.4:8080 ./klouds
+
 ```
 
 OR
@@ -36,6 +51,8 @@ OR
 	export POSTMASTER=postmaster@yourdomain.com
 	export POSTMASTER_KEY=password
 	export MARATHON_ENDPOINT=192.168.3.4:8080
+
+	./klouds
 
 ```
 
