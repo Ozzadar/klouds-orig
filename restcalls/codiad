@@ -1,8 +1,7 @@
 {
     "id":"#USERNAME-codiad",
     "cpus": 0.01,
-    "mem": 100.0,
-    “disk”: 500,
+    "mem": 50.0,
     "instances": 1,
     "container": {
       "type": "DOCKER",

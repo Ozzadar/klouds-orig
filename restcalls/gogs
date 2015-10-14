@@ -1,7 +1,7 @@
 {
     "id":"#USERNAME-gogs",
     "cpus": 0.01,
-    "mem": 100.0,
+    "mem": 50.0,
     "instances": 1,
     "container": {
       "type": "DOCKER",
