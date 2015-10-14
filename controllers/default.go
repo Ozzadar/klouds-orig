@@ -10,6 +10,7 @@ import (
 	"strings"
 	"github.com/elgs/gostrgen"
 	"time"
+	"os"
 )
 
 type MainController struct {
@@ -144,43 +145,18 @@ func (this *LaunchController) Post() {
 			fmt.Println(err)
 		}
 
-		//append username
-		//Grab the x characters before hitting a '{' character
-		//Create new string, removing those characters and appending 'username-' to the id field,
-		//for proper routing.
+		//append username into JSON FILE
 
-		var inFileUntilBrace int = 0;
-		var inFile string = ""
 		var newstring string =""
-		var usernamestring = username + "-"
-
-		for i:=0;i<len(podfile);i++ {
-
-			if string(podfile[i]) == "{" {
-				inFileUntilBrace = i;
-				break;
-			}
-
-			inFile = inFile + string(podfile[i])
-		}
-
-		fmt.Println("Where is brace: ", inFileUntilBrace)
-		j, _ := strconv.Atoi(inFile)
-		fmt.Println("Where does id go? : ", inFile)
-		for i:=inFileUntilBrace; i<len(podfile); i++ {
-			
-
-			if i == j {
-				newstring = newstring + usernamestring + randomstring + "-"
-			}
-
-			newstring = newstring + string(podfile[i])
-		}
+		var usernamestring = username + "-" + randomstring
+		
+		JSONSPLIT := strings.Split(string(podfile), "#USERNAME")
+		newstring = newstring + JSONSPLIT[0] + usernamestring + JSONSPLIT[1]
 
 		fmt.Println(newstring)
 
 		//Create the request
-		url := "http://104.199.142.217:8080/v2/apps"
+		url := "http://" + os.Getenv("MARATHON_ENDPOINT") + "/v2/apps/"
 		bytestring := []byte(newstring)
 		req, err := http.NewRequest("POST", url, bytes.NewBuffer(bytestring))
 
@@ -241,7 +217,7 @@ func (this *DeleteController) Get() {
 	appName  := this.Ctx.Input.Param(":appName")
 
 	//Create the request
-	url := "http://104.199.142.217:8080/v2/apps/" + string(appName)
+	url := "http://" + os.Getenv("MARATHON_ENDPOINT")+ "/v2/apps/" + string(appName)
 
 	req, err := http.NewRequest("DELETE", url, nil)
 

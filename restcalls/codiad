@@ -1,5 +1,5 @@
-14{
-    "id":"codiad",
+{
+    "id":"#USERNAME-codiad",
     "cpus": 0.01,
     "mem": 100.0,
     “disk”: 500,

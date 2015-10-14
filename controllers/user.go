@@ -14,6 +14,8 @@ import (
 	"net/http"
 	"io/ioutil"
 	"time"
+	"os" //For getting environment variables
+
 	//"bytes"
 )
 
@@ -162,13 +164,18 @@ func sendVerification(email, u string) bool {
 	link := "http://klouds.org/user/verify/" + u
 	host := "smtp.mailgun.org"
 	port := 2525
+
+	postmaster := os.Getenv("POSTMASTER")
+	postmaster_key := os.Getenv("POSTMASTER_KEY")
+
+	fmt.Println(postmaster_key + " " + postmaster)
 	msg := gomail.NewMessage()
 	msg.SetAddressHeader("From", "p.a.mauviel@gmail.com", "Klouds.io")
 	msg.SetHeader("To", email)
 	msg.SetHeader("Subject", "Account Verification for Klouds.io")
 	msg.SetBody("text/html", "To verify your account, please click on the link: <a href=\""+link+
 		"\">"+link+"</a><br><br>Best Regards,<br>Klouds.io team.")
-	m := gomail.NewMailer(host, "$EMAIL", "$EMAIL_KEY", port)
+	m := gomail.NewMailer(host, postmaster, postmaster_key, port)
 	if err := m.Send(msg); err != nil {
 		return false
 	}
@@ -232,7 +239,7 @@ func (this *MainController) Profile() {
 	// Create an applist
 
 	//Get all running apps
-	url := "http://104.199.142.217:8080/v2/apps/"
+	url := "http://" + os.Getenv("MARATHON_ENDPOINT") + "/v2/apps"
 	//bytestring := []byte(newstring)
 	req, err := http.NewRequest("GET", url, nil)
 
