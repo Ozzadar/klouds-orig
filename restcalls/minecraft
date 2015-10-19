@@ -18,6 +18,7 @@
         "forcePullImage": true
       }
     },
+    "ports":[10000],
     "labels": {
         "HAPROXY_HTTP": "false",
         "HTTP_PORT_IDX_0_NAME": "#USERNAME-minecraft"
