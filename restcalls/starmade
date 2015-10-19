@@ -1,0 +1,26 @@
+{
+    "id":"#USERNAME-starmade",
+    "cpus": .01,
+    "mem": 100,
+    "instances": 1,
+    "container": {
+      "type": "DOCKER",
+      "docker": {
+        "image": "pandrew/starmade",
+        "network": "BRIDGE",
+        "portMappings": [
+          {
+            "containerPort": 4242
+          }
+        ],
+        "privileged": true,
+        "parameters": [],
+        "forcePullImage": true
+      }
+    },
+    "ports":[4242],
+    "labels": {
+        "HAPROXY_HTTP": "false",
+        "HTTP_PORT_IDX_0_NAME": "#USERNAME-starmade"
+    }
+}
