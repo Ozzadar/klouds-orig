@@ -21,5 +21,9 @@
         "parameters": [],
         "forcePullImage": false
       }
+    },
+    "labels": {
+        "HAPROXY_HTTP": "true",
+        "HTTP_PORT_IDX_0_NAME": "#USERNAME-ghost"
     }
 }

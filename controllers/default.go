@@ -151,7 +151,7 @@ func (this *LaunchController) Post() {
 		var usernamestring = username + "-" + randomstring
 		
 		JSONSPLIT := strings.Split(string(podfile), "#USERNAME")
-		newstring = newstring + JSONSPLIT[0] + usernamestring + JSONSPLIT[1]
+		newstring = newstring + JSONSPLIT[0] + usernamestring + JSONSPLIT[1] + usernamestring + JSONSPLIT[2]
 
 		fmt.Println(newstring)
 

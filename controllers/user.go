@@ -279,7 +279,7 @@ func (this *MainController) Profile() {
 
 	fmt.Println("Number of apps for user: ", len(JSONSPLIT) - 1)
 
-	for i:=1; i<len(JSONSPLIT); i++ {
+	for i:=1; i<len(JSONSPLIT); i+=2 {
 		JSONBYTES := []byte(JSONSPLIT[i])
 
 		appNames[i-1] = strings.ToLower(user.Username)

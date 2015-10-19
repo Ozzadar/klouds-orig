@@ -1,5 +1,5 @@
-14{
-    "id":"minecraft",
+{
+    "id":"#USERNAME-minecraft",
     "cpus": 1,
     "mem": 1000.0,
     "instances": 1,
@@ -17,5 +17,9 @@
         "parameters": [],
         "forcePullImage": true
       }
+    },
+    "labels": {
+        "HAPROXY_HTTP": "false",
+        "HTTP_PORT_IDX_0_NAME": "#USERNAME-minecraft"
     }
 }

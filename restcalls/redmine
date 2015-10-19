@@ -17,5 +17,9 @@
         "parameters": [],
         "forcePullImage": true
       }
+    },
+    "labels": {
+        "HAPROXY_HTTP": "true",
+        "HTTP_PORT_IDX_0_NAME": "#USERNAME-redmine"
     }
 }
