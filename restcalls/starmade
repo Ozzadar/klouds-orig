@@ -6,7 +6,7 @@
     "container": {
       "type": "DOCKER",
       "docker": {
-        "image": "poldus/docker-starmade",
+        "image": "ozzadar/starmade-docker",
         "network": "BRIDGE",
         "portMappings": [
           {
