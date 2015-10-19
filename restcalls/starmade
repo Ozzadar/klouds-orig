@@ -6,7 +6,7 @@
     "container": {
       "type": "DOCKER",
       "docker": {
-        "image": "pandrew/starmade",
+        "image": "poldus/docker-starmade",
         "network": "BRIDGE",
         "portMappings": [
           {
