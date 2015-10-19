@@ -279,7 +279,7 @@ func (this *MainController) Profile() {
 
 	fmt.Println("Number of apps for user: ", len(JSONSPLIT) - 1)
 
-	for i:=1; i<len(JSONSPLIT); i+=2 {
+	for i:=1; i<len(JSONSPLIT); i++ {
 		JSONBYTES := []byte(JSONSPLIT[i])
 
 		appNames[i-1] = strings.ToLower(user.Username)
@@ -295,7 +295,7 @@ func (this *MainController) Profile() {
 
 	formstring :=""
 
-	for i:=0;i<len(appNames);i++ {
+	for i:=0;i<len(appNames);i+=2 {
 		formstring = formstring + "<tr><td>" + appNames[i] + "</td>"
 		formstring = formstring + "<td><a href='http://" + appNames[i] + ".klouds.org' target='_blank'> GO TO SITE</a></td>"
 		formstring = formstring + "<td><a href='../deleteApp/"+ appNames[i] + "'> DELETE APP </a></td>"
