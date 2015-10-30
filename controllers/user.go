@@ -385,7 +385,68 @@ func (this *MainController) Profile() {
 				}
 		} else if (appType[i] == "udp") {
 
+			//REST CALL TO APPNAME
+			url := "http://" + os.Getenv("MARATHON_ENDPOINT") + "/v2/apps/" + appNames[i] 
+			//bytestring := []byte(newstring)
+			req, err := http.NewRequest("GET", url, nil)
 
+			if err != nil {
+				panic(err)
+			}
+
+			//Make the request
+			res, err := http.DefaultClient.Do(req)
+
+			if err != nil {
+		    	panic(err) //Something is wrong while sending request
+		 	}
+
+			body, err := ioutil.ReadAll(res.Body)
+
+			if err != nil {
+				panic(err)
+			}
+
+			splitbyHost := strings.Split(string(body), "host")	//[3] is the one we want 
+
+			if (len(splitbyHost) < 3) {
+				panic ("Fucked something up scraping host")
+			}
+			splitbyPort := strings.Split(string(splitbyHost[2]), "ports"); // [2] is the one we want 
+
+			if (len (splitbyPort) < 2) {
+				panic ("Fucked something up scraping port: " + string(splitbyHost[3]))
+			}
+			//SCRAPE HOST OUT
+
+			hostBytes := []byte(splitbyHost[2])
+			hostString := ""
+
+			for j:=0; j < len(hostBytes);j++ {
+				if ((hostBytes[j] == '"' || hostBytes[j] == ':') && j < 5) {
+					continue
+				} else if ((hostBytes[j] == '"' || hostBytes[j] == ',') && j >= 5){
+					break
+				} else {
+					hostString = hostString + string(hostBytes[j])
+				}
+			}
+						
+
+			//SCRAPE PORT OUT
+			hostPort := ""
+			portBytes := []byte(splitbyPort[1])
+			for j:=0; j < len(portBytes);j++ {
+				if ((portBytes[j] == '"' || portBytes[j] == ':') && j < 3) {
+					continue
+				} else if ((portBytes[j] == '"' || portBytes[j] == ',') && j >= 3){
+					break
+				} else if (portBytes[j] != '[' && portBytes[j] != ']'){
+					hostPort = hostPort + string(portBytes[j])
+				}
+			}
+			//PUT INTO STRING
+			formstring = formstring + "<td><input value='" + hostString + ":" + hostPort + "' type='text' readonly/><td>"
 		}
 		
 		/* PUT CODE TO DO FANCY STUFF HERE */
