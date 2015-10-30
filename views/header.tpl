@@ -25,6 +25,7 @@
 				<li class="active"><a href="/home">home</a></li>
 				{{if .InSession}}
 					<li class="active"><a href="/user/profile">Your Account</a></li>
+					<li class="active"><a href="/user/apps">Your Applications</a></li>
 				{{else}}
 				{{end}}
 				<!-- <li class="active"><a href="/user/profile">Your Applications</a></li> -->
