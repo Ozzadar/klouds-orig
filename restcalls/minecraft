@@ -11,6 +11,7 @@
         "portMappings": [
           {
             "containerPort": 25565
+            "protocol":"tcp"
           }
         ],
         "privileged": true,

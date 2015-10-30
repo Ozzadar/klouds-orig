@@ -15,7 +15,7 @@ import (
 	"io/ioutil"
 	"time"
 	"os" //For getting environment variables
-
+	//"strconv"
 	//"bytes"
 )
 
@@ -272,10 +272,15 @@ func (this *MainController) Profile() {
 		panic(err)
 	}
 
+
+
+
+
 	JSONSPLIT := strings.Split(string(body), strings.ToLower(user.Username))
 	numberOfApps := len(JSONSPLIT) - 1
 	//this.Data["AppList"] = string(body)
 	appNames := make([]string, numberOfApps)
+	appType := make([]string, numberOfApps)
 
 	fmt.Println("Number of apps for user: ", len(JSONSPLIT) - 1)
 
@@ -283,21 +288,170 @@ func (this *MainController) Profile() {
 		JSONBYTES := []byte(JSONSPLIT[i])
 
 		appNames[i-1] = strings.ToLower(user.Username)
-		
-		for j:=0; j<len(JSONBYTES);j++ {
-			if JSONBYTES[j] == '"' {
-				break;
+
+
+
+
+		serviceType := strings.Split(string(JSONSPLIT[i]), "udp")
+
+		if (len(serviceType) == 1) { 
+			serviceType = strings.Split(string(JSONSPLIT[i]), "tcp")
+		} else {
+			appType[i-1] = "udp"
+
+			for j:=0; j<len(JSONBYTES);j++ {
+				if JSONBYTES[j] == '"' {
+					break;
+				}
+				appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
 			}
-			appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
+			fmt.Println(appType[i-1])
+			fmt.Println(appNames[i-1])			
+			continue;
 		}
-		fmt.Println(appNames[i-1])
+		if (len(serviceType) == 1 ) {
+			serviceType = strings.Split(string(JSONSPLIT[i]), "http")
+		} else {
+			appType[i-1] = "tcp"
+			for j:=0; j<len(JSONBYTES);j++ {
+				if JSONBYTES[j] == '"' {
+					break;
+				}
+				appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
+			}
+			fmt.Println(appType[i-1])
+			fmt.Println(appNames[i-1])
+			continue;
+		}
+
+		if (len(serviceType) != 1) {
+			appType[i-1] = "http"
+			for j:=0; j<len(JSONBYTES);j++ {
+				if JSONBYTES[j] == '"' {
+					break;
+				}
+				appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
+			}
+			fmt.Println(appType[i-1])
+			fmt.Println(appNames[i-1])			
+			continue;
+		}
 	}
 
 	formstring :=""
 
 	for i:=0;i<len(appNames);i+=2 {
 		formstring = formstring + "<tr><td>" + appNames[i] + "</td>"
-		formstring = formstring + "<td><a href='http://" + appNames[i] + ".klouds.org' target='_blank'> GO TO SITE</a></td>"
+
+		/* LINK TO CONTAINER PART */
+		if (appType[i] == "tcp") {
+			http := false;
+			checkForHttp := strings.Split(string(JSONSPLIT[i+1]), "HAPROXY_HTTP")
+			if (len(checkForHttp) > 1) {
+				httpBytes := []byte(checkForHttp[1])
+
+				for j:=0; j < len(httpBytes);j++ {
+					if (httpBytes[j] == 't') {
+						http =true;
+						break
+					} else {
+						continue
+					}
+				}
+			}
+
+			if (http) {
+				formstring = formstring + "<td><a href='http://" + appNames[i] + ".klouds.org' target='_blank'> GO TO SITE</a></td>"
+			} else {
+				lookForServicePort := strings.Split(string(JSONSPLIT[i+1]), "servicePort")
+				portString := ""
+
+				if (len(lookForServicePort) > 1) {
+					servicePortBytes := []byte(lookForServicePort[1])
+					
+					
+
+					for j:=0; j < len(servicePortBytes);j++ {
+						if ((servicePortBytes[j] == '"' || servicePortBytes[j] == ':') && j < 5) {
+							continue
+						} else if ((servicePortBytes[j] == '"' || servicePortBytes[j] == ',') && j >= 5){
+							break
+						} else {
+							portString = portString + string(servicePortBytes[j])
+						}
+					}
+				}
+				formstring = formstring + "<td><input value='" + appNames[i] + ".klouds.org:" + portString + "' type='text' readonly/><td>"
+				}
+		} else if (appType[i] == "udp") {
+
+			//REST CALL TO APPNAME
+			url := "http://" + os.Getenv("MARATHON_ENDPOINT") + "/v2/apps/" + appNames[i] 
+			//bytestring := []byte(newstring)
+			req, err := http.NewRequest("GET", url, nil)
+
+			if err != nil {
+				panic(err)
+			}
+
+			//Make the request
+			res, err := http.DefaultClient.Do(req)
+
+			if err != nil {
+		    	panic(err) //Something is wrong while sending request
+		 	}
+
+			body, err := ioutil.ReadAll(res.Body)
+
+			if err != nil {
+				panic(err)
+			}
+
+			splitbyHost := strings.Split(string(body), "host")	//[3] is the one we want 
+
+			if (len(splitbyHost) < 3) {
+				panic ("Fucked something up scraping host")
+			}
+			splitbyPort := strings.Split(string(splitbyHost[2]), "ports"); // [2] is the one we want 
+
+			if (len (splitbyPort) < 2) {
+				panic ("Fucked something up scraping port: " + string(splitbyHost[3]))
+			}
+			//SCRAPE HOST OUT
+
+			hostBytes := []byte(splitbyHost[2])
+			hostString := ""
+
+			for j:=0; j < len(hostBytes);j++ {
+				if ((hostBytes[j] == '"' || hostBytes[j] == ':') && j < 5) {
+					continue
+				} else if ((hostBytes[j] == '"' || hostBytes[j] == ',') && j >= 5){
+					break
+				} else {
+					hostString = hostString + string(hostBytes[j])
+				}
+			}
+						
+
+			//SCRAPE PORT OUT
+			hostPort := ""
+			portBytes := []byte(splitbyPort[1])
+			for j:=0; j < len(portBytes);j++ {
+				if ((portBytes[j] == '"' || portBytes[j] == ':') && j < 3) {
+					continue
+				} else if ((portBytes[j] == '"' || portBytes[j] == ',') && j >= 3){
+					break
+				} else if (portBytes[j] != '[' && portBytes[j] != ']'){
+					hostPort = hostPort + string(portBytes[j])
+				}
+			}
+			//PUT INTO STRING
+			formstring = formstring + "<td><input value='" + hostString + ":" + hostPort + "' type='text' readonly/><td>"
+		}
+		
+		/* PUT CODE TO DO FANCY STUFF HERE */
+
+
 		formstring = formstring + "<td><a href='../deleteApp/"+ appNames[i] + "'> DELETE APP </a></td>"
 	}
 	formstring = formstring + "</tr></table>"
@@ -453,4 +607,251 @@ func (this *MainController) Remove() {
 			return
 		}
 	}
+}
+
+func (this *MainController) Apps() {
+	this.activeContent("user/apps")
+
+	//******** This page requires login
+	sess := this.GetSession("acme")
+	if sess == nil {
+		this.Redirect("/user/login/home", 302)
+		return
+	}
+	m := sess.(map[string]interface{})
+
+	flash := beego.NewFlash()
+
+	//******** Read password hash from database
+	var x pk.PasswordHash
+
+	x.Hash = make([]byte, 32)
+	x.Salt = make([]byte, 16)
+
+	o := orm.NewOrm()
+	o.Using("default")
+	user := models.AuthUser{Username: m["username"].(string)}
+	err := o.Read(&user, "Username")
+	if err == nil {
+		// scan in the password hash/salt
+		if x.Hash, err = hex.DecodeString(user.Password[:64]); err != nil {
+			fmt.Println("ERROR:", err)
+		}
+		if x.Salt, err = hex.DecodeString(user.Password[64:]); err != nil {
+			fmt.Println("ERROR:", err)
+		}
+	} else {
+		flash.Error("Internal error")
+		flash.Store(&this.Controller)
+		return
+	}
+
+	// Create an applist
+
+	//Get all running apps
+	url := "http://" + os.Getenv("MARATHON_ENDPOINT") + "/v2/apps"
+	//bytestring := []byte(newstring)
+	req, err := http.NewRequest("GET", url, nil)
+
+	if err != nil {
+		panic(err)
+	}
+
+	//Make the request
+	res, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+    	panic(err) //Something is wrong while sending request
+ 	}
+
+	body, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		panic(err)
+	}
+
+
+
+
+
+	JSONSPLIT := strings.Split(string(body), strings.ToLower(user.Username))
+	numberOfApps := len(JSONSPLIT) - 1
+	//this.Data["AppList"] = string(body)
+	appNames := make([]string, numberOfApps)
+	appType := make([]string, numberOfApps)
+
+	fmt.Println("Number of apps for user: ", len(JSONSPLIT) - 1)
+
+	for i:=1; i<len(JSONSPLIT); i++ {
+		JSONBYTES := []byte(JSONSPLIT[i])
+
+		appNames[i-1] = strings.ToLower(user.Username)
+
+
+
+
+		serviceType := strings.Split(string(JSONSPLIT[i]), "udp")
+
+		if (len(serviceType) == 1) { 
+			serviceType = strings.Split(string(JSONSPLIT[i]), "tcp")
+		} else {
+			appType[i-1] = "udp"
+
+			for j:=0; j<len(JSONBYTES);j++ {
+				if JSONBYTES[j] == '"' {
+					break;
+				}
+				appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
+			}
+			fmt.Println(appType[i-1])
+			fmt.Println(appNames[i-1])			
+			continue;
+		}
+		if (len(serviceType) == 1 ) {
+			serviceType = strings.Split(string(JSONSPLIT[i]), "http")
+		} else {
+			appType[i-1] = "tcp"
+			for j:=0; j<len(JSONBYTES);j++ {
+				if JSONBYTES[j] == '"' {
+					break;
+				}
+				appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
+			}
+			fmt.Println(appType[i-1])
+			fmt.Println(appNames[i-1])
+			continue;
+		}
+
+		if (len(serviceType) != 1) {
+			appType[i-1] = "http"
+			for j:=0; j<len(JSONBYTES);j++ {
+				if JSONBYTES[j] == '"' {
+					break;
+				}
+				appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
+			}
+			fmt.Println(appType[i-1])
+			fmt.Println(appNames[i-1])			
+			continue;
+		}
+	}
+
+	formstring :=""
+
+	for i:=0;i<len(appNames);i+=2 {
+		formstring = formstring + "<tr><td>" + appNames[i] + "</td>"
+
+		/* LINK TO CONTAINER PART */
+		if (appType[i] == "tcp") {
+			http := false;
+			checkForHttp := strings.Split(string(JSONSPLIT[i+1]), "HAPROXY_HTTP")
+			if (len(checkForHttp) > 1) {
+				httpBytes := []byte(checkForHttp[1])
+
+				for j:=0; j < len(httpBytes);j++ {
+					if (httpBytes[j] == 't') {
+						http =true;
+						break
+					} else {
+						continue
+					}
+				}
+			}
+
+			if (http) {
+				formstring = formstring + "<td><a href='http://" + appNames[i] + ".klouds.org' target='_blank'> GO TO SITE</a></td>"
+			} else {
+				lookForServicePort := strings.Split(string(JSONSPLIT[i+1]), "servicePort")
+				portString := ""
+
+				if (len(lookForServicePort) > 1) {
+					servicePortBytes := []byte(lookForServicePort[1])
+					
+					
+
+					for j:=0; j < len(servicePortBytes);j++ {
+						if ((servicePortBytes[j] == '"' || servicePortBytes[j] == ':') && j < 5) {
+							continue
+						} else if ((servicePortBytes[j] == '"' || servicePortBytes[j] == ',') && j >= 5){
+							break
+						} else {
+							portString = portString + string(servicePortBytes[j])
+						}
+					}
+				}
+				formstring = formstring + "<td><input width='200' value='" + appNames[i] + ".klouds.org:" + portString + "' type='text' readonly/></td>"
+				}
+		} else if (appType[i] == "udp") {
+
+			//REST CALL TO APPNAME
+			url := "http://" + os.Getenv("MARATHON_ENDPOINT") + "/v2/apps/" + appNames[i] 
+			//bytestring := []byte(newstring)
+			req, err := http.NewRequest("GET", url, nil)
+
+			if err != nil {
+				panic(err)
+			}
+
+			//Make the request
+			res, err := http.DefaultClient.Do(req)
+
+			if err != nil {
+		    	panic(err) //Something is wrong while sending request
+		 	}
+
+			body, err := ioutil.ReadAll(res.Body)
+
+			if err != nil {
+				panic(err)
+			}
+
+			splitbyHost := strings.Split(string(body), "host")	//[3] is the one we want 
+
+			if (len(splitbyHost) < 3) {
+				panic ("Fucked something up scraping host")
+			}
+			splitbyPort := strings.Split(string(splitbyHost[2]), "ports"); // [2] is the one we want 
+
+			if (len (splitbyPort) < 2) {
+				panic ("Fucked something up scraping port: " + string(splitbyHost[3]))
+			}
+			//SCRAPE HOST OUT
+
+			hostBytes := []byte(splitbyHost[2])
+			hostString := ""
+
+			for j:=0; j < len(hostBytes);j++ {
+				if ((hostBytes[j] == '"' || hostBytes[j] == ':') && j < 5) {
+					continue
+				} else if ((hostBytes[j] == '"' || hostBytes[j] == ',') && j >= 5){
+					break
+				} else {
+					hostString = hostString + string(hostBytes[j])
+				}
+			}
+						
+
+			//SCRAPE PORT OUT
+			hostPort := ""
+			portBytes := []byte(splitbyPort[1])
+			for j:=0; j < len(portBytes);j++ {
+				if ((portBytes[j] == '"' || portBytes[j] == ':') && j < 3) {
+					continue
+				} else if ((portBytes[j] == '"' || portBytes[j] == ',') && j >= 3){
+					break
+				} else if (portBytes[j] != '[' && portBytes[j] != ']'){
+					hostPort = hostPort + string(portBytes[j])
+				}
+			}
+			//PUT INTO STRING
+			formstring = formstring + "<td><input width='200' value='" + hostString + ":" + hostPort + "' type='text' readonly/></td>"
+		}
+		
+		/* PUT CODE TO DO FANCY STUFF HERE */
+
+
+		formstring = formstring + "<td><a href='../deleteApp/"+ appNames[i] + "'> DELETE APP </a></td>"
+	}
+	formstring = formstring + "</tr></table>"
+	this.Data["AppList"] = formstring
 }
