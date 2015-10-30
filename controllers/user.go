@@ -15,7 +15,7 @@ import (
 	"io/ioutil"
 	"time"
 	"os" //For getting environment variables
-
+	//"strconv"
 	//"bytes"
 )
 
@@ -272,10 +272,15 @@ func (this *MainController) Profile() {
 		panic(err)
 	}
 
+
+
+
+
 	JSONSPLIT := strings.Split(string(body), strings.ToLower(user.Username))
 	numberOfApps := len(JSONSPLIT) - 1
 	//this.Data["AppList"] = string(body)
 	appNames := make([]string, numberOfApps)
+	appType := make([]string, numberOfApps)
 
 	fmt.Println("Number of apps for user: ", len(JSONSPLIT) - 1)
 
@@ -283,21 +288,109 @@ func (this *MainController) Profile() {
 		JSONBYTES := []byte(JSONSPLIT[i])
 
 		appNames[i-1] = strings.ToLower(user.Username)
-		
-		for j:=0; j<len(JSONBYTES);j++ {
-			if JSONBYTES[j] == '"' {
-				break;
+
+
+
+
+		serviceType := strings.Split(string(JSONSPLIT[i]), "udp")
+
+		if (len(serviceType) == 1) { 
+			serviceType = strings.Split(string(JSONSPLIT[i]), "tcp")
+		} else {
+			appType[i-1] = "udp"
+
+			for j:=0; j<len(JSONBYTES);j++ {
+				if JSONBYTES[j] == '"' {
+					break;
+				}
+				appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
 			}
-			appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
+			fmt.Println(appType[i-1])
+			fmt.Println(appNames[i-1])			
+			continue;
 		}
-		fmt.Println(appNames[i-1])
+		if (len(serviceType) == 1 ) {
+			serviceType = strings.Split(string(JSONSPLIT[i]), "http")
+		} else {
+			appType[i-1] = "tcp"
+			for j:=0; j<len(JSONBYTES);j++ {
+				if JSONBYTES[j] == '"' {
+					break;
+				}
+				appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
+			}
+			fmt.Println(appType[i-1])
+			fmt.Println(appNames[i-1])
+			continue;
+		}
+
+		if (len(serviceType) != 1) {
+			appType[i-1] = "http"
+			for j:=0; j<len(JSONBYTES);j++ {
+				if JSONBYTES[j] == '"' {
+					break;
+				}
+				appNames[i-1] = appNames[i-1] + string(JSONBYTES[j])
+			}
+			fmt.Println(appType[i-1])
+			fmt.Println(appNames[i-1])			
+			continue;
+		}
 	}
 
 	formstring :=""
 
 	for i:=0;i<len(appNames);i+=2 {
 		formstring = formstring + "<tr><td>" + appNames[i] + "</td>"
-		formstring = formstring + "<td><a href='http://" + appNames[i] + ".klouds.org' target='_blank'> GO TO SITE</a></td>"
+
+		/* LINK TO CONTAINER PART */
+		if (appType[i] == "tcp") {
+			http := false;
+			checkForHttp := strings.Split(string(JSONSPLIT[i+1]), "HAPROXY_HTTP")
+			if (len(checkForHttp) > 1) {
+				httpBytes := []byte(checkForHttp[1])
+
+				for j:=0; j < len(httpBytes);j++ {
+					if (httpBytes[j] == 't') {
+						http =true;
+						break
+					} else {
+						continue
+					}
+				}
+			}
+
+			if (http) {
+				formstring = formstring + "<td><a href='http://" + appNames[i] + ".klouds.org' target='_blank'> GO TO SITE</a></td>"
+			} else {
+				lookForServicePort := strings.Split(string(JSONSPLIT[i+1]), "servicePort")
+				portString := ""
+
+				if (len(lookForServicePort) > 1) {
+					servicePortBytes := []byte(lookForServicePort[1])
+					
+					
+
+					for j:=0; j < len(servicePortBytes);j++ {
+						if ((servicePortBytes[j] == '"' || servicePortBytes[j] == ':') && j < 5) {
+							continue
+						} else if ((servicePortBytes[j] == '"' || servicePortBytes[j] == ',') && j >= 5){
+							break
+						} else {
+							portString = portString + string(servicePortBytes[j])
+						}
+					}
+				}
+				formstring = formstring + "<td><input value='" + appNames[i] + ".klouds.org:" + portString + "' type='text' readonly/><td>"
+				}
+		} else if (appType[i] == "udp") {
+
+
+		}
+		
+		/* PUT CODE TO DO FANCY STUFF HERE */
+
+
 		formstring = formstring + "<td><a href='../deleteApp/"+ appNames[i] + "'> DELETE APP </a></td>"
 	}
 	formstring = formstring + "</tr></table>"

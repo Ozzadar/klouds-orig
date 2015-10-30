@@ -10,7 +10,8 @@
         "network": "BRIDGE",
         "portMappings": [
           {
-            "containerPort": 27015
+            "containerPort": 27015,
+            "protocol":"udp"
           }
         ],
         "privileged": true,
