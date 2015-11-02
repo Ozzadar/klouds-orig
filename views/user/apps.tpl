@@ -1,7 +1,7 @@
 <div id="welcome">
     <div class="container">
         <div class="title">
-            <h1>Your Account</h1>
+            <h1>Your Applications</h1>
             &nbsp;
             {{if .flash.error}}
             <h3>{{.flash.error}}</h3>
@@ -18,7 +18,7 @@
             {{end}}
         </div>
         <div >
-        <h2><a href="../../appLaunch" class="button">Launch an App!</a> <br>
+        <h2><a href="/appLaunch" class="button">Launch an App!</a> <br>
         
             <table id="appList">
                 <col width="33%">
