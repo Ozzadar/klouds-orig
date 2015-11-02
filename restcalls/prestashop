@@ -1,25 +1,26 @@
 {
-    "id":"#USERNAME-reactioncommerce",
+    "id":"#USERNAME-prestashop",
     "cpus": 0.01,
-    "mem": 200.0,
+    "mem": 50.0,
     "instances": 1,
+
     "container": {
       "type": "DOCKER",
       "docker": {
-        "image": "reactioncommerce/reaction",
+        "image": "prestashop/prestashop",
         "network": "BRIDGE",
         "portMappings": [
           {
-            "containerPort": 3000
+            "containerPort": 80
           }
         ],
         "privileged": true,
-        "parameters": [],
-        "forcePullImage": true
+        "forcePullImage": false
       }
     },
+    "ports":[10000],
     "labels": {
         "HAPROXY_HTTP": "true",
-        "HTTP_PORT_IDX_0_NAME": "#USERNAME-reactioncommerce"
+        "HTTP_PORT_IDX_0_NAME": "#USERNAME-prestashop"
     }
 }

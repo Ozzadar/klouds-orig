@@ -17,7 +17,7 @@
             &nbsp;
             {{end}}
         </div>
-        <div class="actions">
+        <div >
         <h2><a href="../../appLaunch" class="button">Launch an App!</a> <br>
         
             <table id="appList">

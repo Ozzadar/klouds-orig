@@ -260,7 +260,7 @@ func (this *DeleteController) Post() {
 	fmt.Println(res.StatusCode)
 
 	time.Sleep(2 * time.Second)
-	this.Redirect("/user/profile", 302)
+	this.Redirect("/user/apps", 302)
 	m := sess.(map[string]interface{})
 	fmt.Println("username is", m["username"])
 	fmt.Println("logged in at", m["timestamp"])

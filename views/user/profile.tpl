@@ -1,5 +1,5 @@
-<div id="wrapper">
-    <div id="three-column" class="container">
+<div id="welcome">
+    <div class="container">
         <div class="title">
             <h1>Your Account</h1>
             &nbsp;
@@ -17,36 +17,8 @@
             &nbsp;
             {{end}}
         </div>
-        <div class="boxA">        
-            <table id="appList">
-                <tr>
-                    
-                   
-                        <h2>APPLICATION LIST</h2>
-                    
-                
-                </tr>    
-
-                <tr>
-                    <td>Application name<br>
-                    -----------------</td>
-                    <td>Application link<br>
-                        -----------------
-                    </td>
-                    <td>DELETE APPLICATION<br>
-                    ----------------</td>
-                </tr>
-                {{str2html .AppList}}   
-            </table>
-        </div>
-        <div class="boxB">
-                 
-
-                   <h2><a href="../../appLaunch" class="button">Launch an App!</a>
-
-               
-        </div>
-        <div class="boxC">
+        
+        <div class="actions">
             <form method="POST">
                 <table>
                 <tr>

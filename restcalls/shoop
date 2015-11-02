@@ -1,16 +1,16 @@
 {
-    "id":"#USERNAME-reactioncommerce",
+    "id":"#USERNAME-shoop",
     "cpus": 0.01,
-    "mem": 200.0,
+    "mem": 50.0,
     "instances": 1,
     "container": {
       "type": "DOCKER",
       "docker": {
-        "image": "reactioncommerce/reaction",
+        "image": "suutari/shoop",
         "network": "BRIDGE",
         "portMappings": [
           {
-            "containerPort": 3000
+            "containerPort": 8080
           }
         ],
         "privileged": true,
@@ -20,6 +20,6 @@
     },
     "labels": {
         "HAPROXY_HTTP": "true",
-        "HTTP_PORT_IDX_0_NAME": "#USERNAME-reactioncommerce"
+        "HTTP_PORT_IDX_0_NAME": "#USERNAME-shoop"
     }
 }
