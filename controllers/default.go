@@ -174,7 +174,7 @@ func (this *LaunchController) Post() {
 
 	  	this.Data["Launching"] = "Launching successful! Redirecting in 2s ..."
 	  	time.Sleep(5 * time.Second)
-	  	this.Redirect("/user/profile", 302)
+	  	this.Redirect("/user/apps", 302)
 
 	}
 	flash := beego.ReadFromRequest(&this.Controller)
