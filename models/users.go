@@ -4,6 +4,8 @@ import (
 	"regexp"
 	"unicode"
 )
+
+//User struct for database entries
 type User struct {
   Id       	int64
   Username 	string	`sql:"size:255; not null; unique;"`
@@ -13,10 +15,11 @@ type User struct {
   Password 	string 	`sql:"size:255; not null;"`
   Role 		string 	`sql:"size:30"` 
   IsEnabled	bool 	`sql:"default:true"`
-  	ConfirmPassword 	string 	`sql:"-"`
-  	Message				string 	`sql:"-"`
+  	ConfirmPassword 	string 	`sql:"-"`	//These dont get put in the database
+  	Message				string 	`sql:"-"`	//These dont get put in the database
 }
 
+//Validates inputs for registration page
 func (u *User) ValidateRegister() {
 
 
@@ -52,6 +55,7 @@ func (u *User) ValidateRegister() {
 
 }
 
+//Validates inputs for login page
 func (u *User) ValidateLogin() {
 	errorstring := "";
 
@@ -69,6 +73,7 @@ func (u *User) ValidateLogin() {
 
 }
 
+//Validates inputs for updating password on profile page
 func (u *User) ValidateNewPassword() {
 	errorstring := "";
 
@@ -80,7 +85,7 @@ func (u *User) ValidateNewPassword() {
 	if (u.Password != u.ConfirmPassword) {
 		errorstring = errorstring + "Passwords don't match. -- "
 	}
-	
+
 	u.Message = errorstring
 
 
@@ -98,6 +103,7 @@ func VerifyName(s string) bool {
 
 }
 
+//return true if valid
 func VerifyEmail(s string) bool {
 
 	reg , err := regexp.Compile(`\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3}`)
@@ -109,6 +115,7 @@ func VerifyEmail(s string) bool {
 	return reg.MatchString(string(s))
 }
 
+//returns true when it contains each requirement.
 func VerifyPassword(s string) (sevenOrMore, number, upper, special bool) {
     letters := 0
     for _, s := range s {

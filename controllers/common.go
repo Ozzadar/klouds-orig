@@ -6,6 +6,7 @@ import (
     "github.com/jinzhu/gorm"
     "github.com/superordinate/klouds2.0/models"
     "github.com/gorilla/securecookie"
+    "time"
     "fmt"
 )
 
@@ -19,10 +20,13 @@ var (
 	cookieHandler *securecookie.SecureCookie 
 )
 
+//Initializes supporting functions
 func Init() {
 	InitCookieHandler()
 	InitDB()
 }
+
+
 /*Session Management */
 //Initialize the cookie handler
 func InitCookieHandler() {
@@ -38,12 +42,13 @@ func setSession(userName string, response http.ResponseWriter) {
 		"name": userName,
 	}
 
-	fmt.Println(cookieHandler)
 	if encoded, err := cookieHandler.Encode("kloudsSession", value); err == nil {
 	 	cookie := &http.Cookie {
 		    Name:  "kloudsSession",
 		    Value: encoded,
 		    Path:  "/",
+		    HttpOnly: true,
+
 		}
 		
 		http.SetCookie(response, cookie)
@@ -65,13 +70,16 @@ func getUserName(request *http.Request) (userName string) {
 
 //clears the active session
 func clearSession(response http.ResponseWriter) {
+	loc, _ := time.LoadLocation("UTC")
+
    	cookie := &http.Cookie{
-    	Name:   "session",
+    	Name:   "kloudsSession",
         Value:  "",
         Path:   "/",
-        MaxAge: -1,
+        Expires: time.Date(1970, 1, 1,1,1,1,0,loc),
+        MaxAge: 0,
     }
-    
+    fmt.Println("clearing session")
     http.SetCookie(response, cookie)
 }
 

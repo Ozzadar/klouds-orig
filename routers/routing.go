@@ -24,8 +24,10 @@ func (r *Routing) Init() {
 	u := &controllers.UserController{Render: r.Render}
 	
 	r.Mux.GET("/", c.Index)
+	r.Mux.GET("/user", u.Login)
 	r.Mux.POST("/user/register", u.Register)
 	r.Mux.GET("/user/register", u.Register)
+	r.Mux.POST("/user/logout", u.Logout)
 	r.Mux.POST("/user/login", u.Login)
 	r.Mux.GET("/user/login", u.Login)
 	r.Mux.GET("/user/profile", u.Profile)

@@ -28,7 +28,12 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="#about">About</a>
+                        {{if .Username "" }}
+                            <a href="#about">Profile</a>
+                        {{else}}
+                            <a href="#about">Login</a>
+                        {{end}}
+                        
                     </li>
                     <li>
                         <a href="#services">Services</a>

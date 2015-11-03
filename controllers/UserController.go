@@ -16,22 +16,14 @@ type UserController struct {
 
 
 
-
+//Index page
 func (c *UserController) Index(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		
-		newuser:= models.User{	Username:	"ozzadar", 
-								Email: 		"ozzadar@ozzadar.com", 
-								FirstName:	"Paul",
-								Surname:	"Mauviel",
-								Password: 	"diamond11",
-								Role:		"admin"}
-
-		CreateUser(&newuser)
 
 		c.HTML(rw, http.StatusOK, "index", nil)
 		
 }
 
+//Registration page
 func (c *UserController) Register(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	
 
@@ -86,10 +78,11 @@ func (c *UserController) Register(rw http.ResponseWriter, r *http.Request, p htt
 	
 }
 
+//Login page
 func (c *UserController) Login(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	if r.Method == "GET" {
-		
-		c.HTML(rw, http.StatusOK, "user/login", nil)
+		// if logged in, go to profile / else login page
+		RedirectToLogin(c,rw,r,p)
 
 	} else if r.Method == "POST" {
 		r.ParseForm();
@@ -132,19 +125,13 @@ func (c *UserController) Login(rw http.ResponseWriter, r *http.Request, p httpro
 	}
 }
 
+//profile page
 func (c *UserController) Profile(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	if r.Method == "GET" {
-		var user *models.User
-
-		if getUserName(r) != "" {
-			user = GetUserByUsername(getUserName(r))
-			c.HTML(rw, http.StatusOK, "user/profile", user)
-			
-		} else {
-			c.HTML(rw, http.StatusOK, "user/login", nil)
-		}
+		RedirectToLogin(c,rw,r,p)
 
 	} else if r.Method == "POST" {
+		// if logged in, go to profile / else login page
 		var user *models.User
 
 		if getUserName(r) != "" {
@@ -190,4 +177,37 @@ func (c *UserController) Profile(rw http.ResponseWriter, r *http.Request, p http
 
 		c.HTML(rw, http.StatusOK, "user/profile", user)
 	}
+}
+
+func (c *UserController) Logout(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	if r.Method == "POST" {
+		clearSession(rw)
+		
+		var user *models.User
+
+		if getUserName(r) != "" {
+			user = GetUserByUsername(getUserName(r))
+			c.HTML(rw, http.StatusOK, "user/logout", user)
+			
+		} else {
+			c.HTML(rw, http.StatusOK, "user/logout", nil)
+		}
+
+		
+
+	}
+}
+
+// if logged in, go to profile / else login page
+func RedirectToLogin(c *UserController, rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+
+		var user *models.User
+
+		if getUserName(r) != "" {
+			user = GetUserByUsername(getUserName(r))
+			c.HTML(rw, http.StatusOK, "user/profile", user)
+			
+		} else {
+			c.HTML(rw, http.StatusOK, "user/login", nil)
+		}
 }
