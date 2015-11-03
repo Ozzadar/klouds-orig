@@ -5,7 +5,7 @@ import (
 	"github.com/superordinate/klouds2.0/models"
 	"gopkg.in/unrolled/render.v1"
 	"github.com/julienschmidt/httprouter"
-	"regexp"
+	"strings"
 	//"fmt"
 )
 
@@ -42,47 +42,152 @@ func (c *UserController) Register(rw http.ResponseWriter, r *http.Request, p htt
 
 	} else if r.Method == "POST" {
 		r.ParseForm();
-
-		reg, err := regexp.Compile(`\W`)
-
-		if err != nil {
-			panic(err)
-		}
-		errorstring := "";
-		username := r.FormValue("username")
+		username := strings.ToLower(r.FormValue("username"))
 		email := r.FormValue("email")
 		firstname := r.FormValue("firstname")
 		surname := r.FormValue("lastname")
-	//	password := r.FormValue("password")
-	//	confirmpassword := r.FormValue("confirmpassword")
+		password := r.FormValue("password")
+		confirmpassword := r.FormValue("confirmpassword")
 
-		if (reg.MatchString(string(username))) {
-			errorstring = errorstring + "Username is invalid. A-Za-z0-9 only. -- "
-		}
-		if (reg.MatchString(string(firstname))) {
-			errorstring = errorstring + "First Name is invalid. A-Za-z0-9 only. -- "
-		}
-		if (reg.MatchString(string(surname))) {
-			errorstring = errorstring + "Last Name is invalid. A-Za-z0-9 only. -- "
-		}
-	
-		reg , err = regexp.Compile(`\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3}`)
+		newUser := models.User{
+			Username: 			username,
+			Email:				email,
+			FirstName: 			firstname,
+			Surname:			surname,
+			Password: 			password,
+			ConfirmPassword: 	confirmpassword,
+			Role:				"user"}
 
-		if err != nil {
-			panic(err)
-		}
 
-		if (!(reg.MatchString(string(email)))) {
-			errorstring = errorstring + "Email is invalid.\n"
+		newUser.ValidateRegister()
+
+		if (newUser.Message != "") {
+
+			c.HTML(rw, http.StatusOK, "user/register", newUser)
+			return;
 		}
 
-		if (errorstring != "") {
-			error := ErrorMessage{Message: errorstring}
-
-			c.HTML(rw, http.StatusOK, "user/register", error)
+			
+		if CheckForExistingUsername(&newUser) {
+			if CheckForExistingEmail(&newUser) {
+				CreateUser(&newUser);
+				newUser.Message = "User " + newUser.Username + " successfully created."
+			} else {
+				newUser.Message = "Email: " + newUser.Email + " already taken."
+			}
+		} else {
+			newUser.Message = "User: " + newUser.Username + " already exists."
 		}
+
+		c.HTML(rw, http.StatusOK, "user/register", newUser)
 
 	}
 
 	
+}
+
+func (c *UserController) Login(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	if r.Method == "GET" {
+		
+		c.HTML(rw, http.StatusOK, "user/login", nil)
+
+	} else if r.Method == "POST" {
+		r.ParseForm();
+
+		username := strings.ToLower(r.FormValue("username"))
+		password := r.FormValue("password")
+
+		newUser := models.User {
+			Username: 	username,
+			Password: 	password}
+
+		newUser.ValidateLogin()
+
+		if (newUser.Message != "") {
+
+			c.HTML(rw, http.StatusOK, "user/login", newUser)
+			return;
+		}
+
+		if !CheckForExistingUsername(&newUser) {
+			//User Exists
+			if (CheckForMatchingPassword(&newUser)) {
+				//Passwords Match
+				//Open Session and forward back to front page
+				newUser.Message = "Passwords match."
+				setSession(newUser.Username, rw)
+				c.HTML(rw, http.StatusOK, "user/loggedIn", newUser)
+				return;
+
+			} else {
+				newUser.Message = "Password doesn't match record for " + newUser.Username
+			}
+
+		} else {
+			//User Doesn't exist
+			newUser.Message = "User " + newUser.Username + " doesn't exist."
+		}
+
+		c.HTML(rw, http.StatusOK, "user/login", newUser)
+	}
+}
+
+func (c *UserController) Profile(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	if r.Method == "GET" {
+		var user *models.User
+
+		if getUserName(r) != "" {
+			user = GetUserByUsername(getUserName(r))
+			c.HTML(rw, http.StatusOK, "user/profile", user)
+			
+		} else {
+			c.HTML(rw, http.StatusOK, "user/login", nil)
+		}
+
+	} else if r.Method == "POST" {
+		var user *models.User
+
+		if getUserName(r) != "" {
+			user = GetUserByUsername(getUserName(r))
+			
+		} else {
+			c.HTML(rw, http.StatusOK, "user/login", nil)
+			return
+		}
+
+		r.ParseForm();
+
+		currentPassword := r.FormValue("currentpassword")
+		password := r.FormValue("password")
+		confirmpassword := r.FormValue("confirmpassword")
+
+		user.Password = currentPassword
+
+		//Check to make sure password matches record
+		if (CheckForMatchingPassword(user)) {
+			//Passwords Match
+			//Validate new password, make sure they match, update user,display success message
+			
+			user.Password = password
+			user.ConfirmPassword = confirmpassword
+
+			user.ValidateNewPassword()
+
+			if user.Message != "" {
+				c.HTML(rw, http.StatusOK, "user/profile", user)
+				return
+			} else {
+				user.Message = "Updated user"
+				UpdateUser(user)
+				c.HTML(rw, http.StatusOK, "user/profile", user)
+				return
+			}
+			
+
+		} else {
+			user.Message = "Password doesn't match record for " + user.Username
+		}
+
+		c.HTML(rw, http.StatusOK, "user/profile", user)
+	}
 }

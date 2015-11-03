@@ -1,0 +1,13 @@
+{{template "header"}}
+<div class="container">
+
+    <hr class="featurette-divider">
+
+    <!-- First Featurette -->
+    <div class="featurette">
+	    User {{.Username}} logged in.<br>
+	    Redirecting to profile in 1 second.
+	    <META HTTP-EQUIV=REFRESH CONTENT="1; URL=/user/profile">.
+    </div>
+</div>
+{{template "footer"}}

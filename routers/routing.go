@@ -16,7 +16,7 @@ type Routing struct {
 
 func (r *Routing) Init() {
 
-	controllers.InitDB()
+	controllers.Init()
 	r.Render = render.New(render.Options{Directory: "views" })
 	r.Mux = httprouter.New()
 
@@ -26,6 +26,10 @@ func (r *Routing) Init() {
 	r.Mux.GET("/", c.Index)
 	r.Mux.POST("/user/register", u.Register)
 	r.Mux.GET("/user/register", u.Register)
+	r.Mux.POST("/user/login", u.Login)
+	r.Mux.GET("/user/login", u.Login)
+	r.Mux.GET("/user/profile", u.Profile)
+	r.Mux.POST("/user/profile", u.Profile)
 	
 	r.Mux.NotFound = http.FileServer(http.Dir("public"))
 }

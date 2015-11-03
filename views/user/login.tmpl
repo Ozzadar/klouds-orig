@@ -1,12 +1,48 @@
 {{template "header"}}
 
-<h1>Login</h1>
-<form method="post" action="/login">
-     <label for="name">User name</label>
-     <input type="text" id="name" name="name">
-     <label for="password">Password</label>
-     <input type="password" id="password" name="password">
-     <button type="submit">Login</button>
-</form>
+<div class="container">
+
+    <hr class="featurette-divider">
+
+    <!-- First Featurette -->
+    <div class="featurette">
+		<h1>Login</h1>
+		<b><i><font color="red">{{.Message}}</font></i></b>
+		<table>
+		 	<col width="40%">
+  			<col width="20%">
+			<tr>
+				<form method="POST" action="/user/login">
+				<td>
+			     	<label for="username">User name</label>
+			     </td><td>&nbsp;</td><td>
+			    	<input type="text" id="username" name="username" value="{{.Username}}"><br>
+		    	</td>
+			</tr>
+			<tr>
+		    	<td>
+		    		<label for="password">Password</label>
+		    	</td>
+		    	<td>
+		    		&nbsp;
+		    	</td>
+		    	<td>
+		    		<input type="password" id="password" name="password"><br>
+		    	</td>
+		    </tr>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+			    	<button type="submit" value="Login">Login</button>
+			    </td>
+				</form>
+			</tr>
+		</table>
+	</div>
+</div>
 
 {{template "footer"}}
