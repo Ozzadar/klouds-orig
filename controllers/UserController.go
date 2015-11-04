@@ -15,14 +15,6 @@ type UserController struct {
 }
 
 
-
-//Index page
-func (c *UserController) Index(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-
-		c.HTML(rw, http.StatusOK, "index", nil)
-		
-}
-
 //Registration page
 func (c *UserController) Register(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	

@@ -2,9 +2,10 @@ package controllers
 
 import (
 	"net/http"
-
+	"github.com/superordinate/klouds2.0/models"
 	"gopkg.in/unrolled/render.v1"
 	"github.com/julienschmidt/httprouter"
+
 )
 
 type SiteNavController struct {
@@ -18,5 +19,13 @@ func (c *SiteNavController) ServeFull(rw http.ResponseWriter, r *http.Request, p
 }
 
 func (c *SiteNavController) Index(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	c.HTML(rw, http.StatusOK, "index", nil)
+		var user *models.User
+
+		if getUserName(r) != "" {
+			user = GetUserByUsername(getUserName(r))
+			c.HTML(rw, http.StatusOK, "index", user)
+			
+		} else {
+			c.HTML(rw, http.StatusOK, "index", nil)
+		}
 }

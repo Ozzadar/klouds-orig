@@ -1,0 +1,163 @@
+{{template "header" .}}
+
+<div class="container">
+
+    <hr class="featurette-divider">
+
+    <!-- First Featurette -->
+    <div class="featurette">
+		<h1>New Application</h1>
+		<b><i><font color="red">{{.Message}}</font></i></b>
+		<table>
+		 	<col width="40%">
+  			<col width="20%">
+			<tr>
+				<form method="POST" action="/apps/admin/newapp">
+				<td>
+			     	<label for="appname">Applicaton Name</label>
+			     </td><td>&nbsp;</td><td>
+			    	<input type="text" size="47" id="appname" name="appname" value="{{.Name}}"><br>
+		    	</td>
+			</tr><tr>				
+		    	<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+
+			</tr>
+			<tr>
+		    	<td>
+		    		<label for="dockerimage">Docker Image</label>
+		    	</td>
+		    	<td>
+		    		&nbsp;
+		    	</td>
+		    	<td>
+		    		<input type="text" size="47" id="dockerimage" name="dockerimage" value="{{.DockerImage}}"><br>
+		    	</td>
+		    </tr><tr>				
+		    	<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+
+			</tr><tr>
+		    	<td>
+		    		<label for="dependencies">Dependencies <font size="1.5"><i>(dependency1, dependency2)</i></font></label>
+		    	</td>
+		    	<td>
+		    		&nbsp;
+		    	</td>
+		    	<td>
+		    		<input type="text" size="47" id="dependencies" name="dependencies" value="{{.Dependencies}}"><br>
+		    	</td>
+
+		    </tr><tr>
+		    	<td>
+		    		<label for="environmentvariables">Environment Variables <font size="1.5"><i>(key1:value1, key2:value2)</i></font></label>
+		    	</td>
+		    	<td>
+		    		&nbsp;
+		    	</td>
+		    	<td>
+		    		<input type="text" size="47" id="environmentvariables" name="environmentvariables" value="{{.EnvironmentVariables}}"><br>
+		    	</td>
+
+		    </tr>
+		    <tr>				
+		    	<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+
+			</tr><tr>
+		    	<td>
+		    		<label for="logo">Logo Url</label>
+		    	</td>
+		    	<td>
+		    		&nbsp;
+		    	</td>
+		    	<td>
+		    		<input type="text" size="47" id="logo" name="logo" value="{{.Logo}}"><br>
+		    	</td>
+		    </tr>
+		    <tr>				
+		    	<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+
+			</tr>
+		    <tr>
+		    	<td>
+		    		<label for="description">Description</label>
+		    	</td>
+		    	<td>
+		    		&nbsp;
+		    	</td>
+		    	<td>
+		    		<textarea rows="8" cols="50" id="description" name="description">
+					{{.Description}}
+					</textarea>
+		    	</td>
+		    </tr><tr>				
+		    	<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+
+			</tr><tr>
+			    <td>
+			     	<label for="internalport">Internal Port <font size="1.5"><i>(inside container)</i></font></label>
+			    </td>
+			    <td>
+			    	&nbsp;
+			    </td>
+			    <td>
+			    	<input type="text" size="47" id="internalport" name="internalport"><br>
+			    </td>
+			</tr><tr>				
+		    	<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+
+			</tr><tr>
+			    <td>
+			     	<label for="protocol">Transmission Protocol <font size="1.5"><i>(TCP, UDP, HTTP)</i></font></label>
+			    </td>
+			    <td>
+			    	&nbsp;
+			    </td>
+			    <td>
+			    	<input type="text" size="47" id="protocol" name="protocol"><br>
+			    </td>
+			</tr><tr>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+			    	<button type="submit" value="CreateApplication">Create Application</button>
+			    </td>
+				</form>
+			</tr>
+		</table>
+	</div>
+</div>
+
+{{template "footer"}}

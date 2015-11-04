@@ -7,6 +7,8 @@ import (
     "github.com/superordinate/klouds2.0/models"
     "github.com/gorilla/securecookie"
     "time"
+    "strings"
+    "unicode"
     "fmt"
 )
 
@@ -106,8 +108,45 @@ func InitDB() {
     if !dbm.HasTable(&models.User{}){
         dbm.CreateTable(&models.User{})
     }
+    if !dbm.HasTable(&models.Application{}){
+        dbm.CreateTable(&models.Application{})
+    }
+    if !dbm.HasTable(&models.Dependency{}){
+        dbm.CreateTable(&models.Dependency{})
+    }
+    if !dbm.HasTable(&models.EnvironmentVariable{}){
+        dbm.CreateTable(&models.EnvironmentVariable{})
+    }
 }
 
+
+/* HELPER FUNCTIONS */
+
+//Checks if user is admin and redirects to login page if s/he isn't
+func NotAdministrator(user *models.User, c *ApplicationsController, rw http.ResponseWriter) bool {
+
+	if user.Role != "admin"{
+		user.Message = "You are not an administrator."
+		c.HTML(rw, http.StatusOK, "user/login", user)
+		return true
+	} else {
+		return false
+	}
+}
+
+//strips all whitespace out of a string
+func stripSpaces(str string) string {
+    return strings.Map(func(r rune) rune {
+        if unicode.IsSpace(r) {
+            // if the character is a space, drop it
+            return -1
+        }
+        // else keep it in the string
+        return r
+    }, str)
+}
+
+/* USER DATABASE CALLS */
 //Create a new user in the database
 func CreateUser(u *models.User) {
 	fmt.Println("Creating user: " + u.Username)
@@ -115,7 +154,7 @@ func CreateUser(u *models.User) {
 	db.Create(&u)
 }
 
-//Check if Username exists
+//Check if Username exists, returns false if username not taken
 func CheckForExistingUsername(u *models.User) bool {
 	newUser := &models.User{}
 
@@ -124,7 +163,7 @@ func CheckForExistingUsername(u *models.User) bool {
 	return newUser.Id == 0
 } 
 
-//Check if Email exists
+//Check if Email exists, returns false if email not taken
 func CheckForExistingEmail(u *models.User) bool {
 	newUser := &models.User{}
 
@@ -155,3 +194,27 @@ func GetUserByUsername(username string) *models.User {
 func UpdateUser(u *models.User) {
 	db.Save(&u)
 } 
+
+
+/* APPLICATION DATABASE THINGS */
+
+//Check if application exists in database, returns true if app exists
+func CheckApplicationExists(appname string) bool {
+	if appname == "" {
+		return true
+	}
+
+	newapp := &models.Application{}
+
+	db.Where(&models.Application{Name: appname}).First(&newapp)
+
+	return newapp.Id != 0
+}
+
+//Create application in DB
+func CreateApplication(a *models.Application) {
+	fmt.Println("Creating Application: " + a.Name)
+
+	db.Create(&a)
+
+}

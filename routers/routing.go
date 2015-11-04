@@ -34,8 +34,11 @@ func (r *Routing) Init() {
 
 	c := &controllers.SiteNavController{Render: r.Render}
 	u := &controllers.UserController{Render: r.Render}
+	a := &controllers.ApplicationsController{Render: r.Render}
 	
 	r.Mux.GET("/", c.Index)
+
+	//User Pages
 	r.Mux.GET("/user", u.Login)
 	r.Mux.POST("/user/register", u.Register)
 	r.Mux.GET("/user/register", u.Register)
@@ -44,6 +47,11 @@ func (r *Routing) Init() {
 	r.Mux.GET("/user/login", u.Login)
 	r.Mux.GET("/user/profile", u.Profile)
 	r.Mux.POST("/user/profile", u.Profile)
+
+	//Application Pages
+	r.Mux.GET("/apps/admin", a.AppAdmin)
+	r.Mux.GET("/apps/admin/newapp", a.CreateApplication)
+	r.Mux.POST("/apps/admin/newapp", a.CreateApplication)
 	
 	r.Mux.NotFound = http.FileServer(http.Dir("public"))
 }
