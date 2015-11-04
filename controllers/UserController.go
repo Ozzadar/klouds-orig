@@ -30,7 +30,15 @@ func (c *UserController) Register(rw http.ResponseWriter, r *http.Request, p htt
 
 	if r.Method == "GET" {
 		
-		c.HTML(rw, http.StatusOK, "user/register", nil)
+		var user *models.User
+
+		if getUserName(r) != "" {
+			user = GetUserByUsername(getUserName(r))
+			c.HTML(rw, http.StatusOK, "user/profile", user)
+			
+		} else {
+			c.HTML(rw, http.StatusOK, "user/register", nil)
+		}
 
 	} else if r.Method == "POST" {
 		r.ParseForm();

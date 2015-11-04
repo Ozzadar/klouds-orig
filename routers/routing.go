@@ -2,9 +2,11 @@ package routers
 
 import (
 	"net/http"
+	"html/template"
 	"gopkg.in/unrolled/render.v1"
 	"github.com/julienschmidt/httprouter"
 	"github.com/superordinate/klouds2.0/controllers"
+	"fmt"
 )
 
 type Routing struct {
@@ -17,7 +19,17 @@ type Routing struct {
 func (r *Routing) Init() {
 
 	controllers.Init()
-	r.Render = render.New(render.Options{Directory: "views" })
+	r.Render = render.New(render.Options{Directory: "views",
+		Funcs: []template.FuncMap{
+        {
+
+            "str2html": func(raw string) template.HTML {
+            	fmt.Println(raw)
+                return template.HTML(raw)
+            },
+        },
+    },
+    })
 	r.Mux = httprouter.New()
 
 	c := &controllers.SiteNavController{Render: r.Render}

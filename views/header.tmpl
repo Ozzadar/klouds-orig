@@ -22,16 +22,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Klouds.io</a>
+                <a class="navbar-brand" href="/">Klouds.io</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        {{if .Username "" }}
-                            <a href="#about">Profile</a>
+                        {{if .Username }}
+                            <a href="/user/profile">Profile</a>
                         {{else}}
-                            <a href="#about">Login</a>
+                            <a href="/user/login">Login</a>
                         {{end}}
                         
                     </li>
