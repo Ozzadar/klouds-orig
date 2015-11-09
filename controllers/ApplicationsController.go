@@ -292,6 +292,7 @@ func (c *ApplicationsController) Launch(rw http.ResponseWriter, r *http.Request,
 			//Add launched application to DB
 
 			//Display new application
+			application.Username = getUserName(r)
 
 			c.HTML(rw, http.StatusOK, "apps/launch", application)
 			
