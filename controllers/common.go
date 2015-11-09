@@ -91,7 +91,7 @@ func InitDB() {
 
 	fmt.Println("Initializing Database connection.")
 
-    dbm, err := gorm.Open("mysql", "root:diamond11@(127.0.0.1:3306)/klouds?charset=utf8&parseTime=True")
+    dbm, err := gorm.Open("mysql", "root:thesecretsauce@(127.0.0.1:3306)/klouds?charset=utf8&parseTime=True")
 
     if(err != nil){
         panic("Unable to connect to the database")
@@ -103,7 +103,7 @@ func InitDB() {
     dbm.DB().Ping()
     dbm.DB().SetMaxIdleConns(10)
     dbm.DB().SetMaxOpenConns(100)
-    db.LogMode(false)
+    db.LogMode(true)
  
     if !dbm.HasTable(&models.User{}){
         dbm.CreateTable(&models.User{})
@@ -217,4 +217,40 @@ func CreateApplication(a *models.Application) {
 
 	db.Create(&a)
 
+}
+
+//Get Application List
+func GetApplications(a *[]models.Application) {
+	fmt.Println("Getting list of all applications")
+
+	//Returns a list of all applications 
+	applicationList := []models.Application{}
+
+	db.Find(&applicationList)
+	//makes the list externally available
+	*a = applicationList
+}
+
+//Get application by name
+func GetApplicationByName(appname string) *models.Application {
+
+	newapp := &models.Application{}
+	dependencies := []models.Dependency{}
+	envvariables := []models.EnvironmentVariable{}
+
+	//Get an application -- this doesnt grab associated dbs
+	db.Where(&models.Application{Name: appname}).First(&newapp)
+
+	db.Model(&newapp).Related(&dependencies)
+	db.Model(&newapp).Related(&envvariables)
+
+	fmt.Println(newapp)
+	fmt.Println(dependencies)
+	fmt.Println(envvariables)
+
+	newapp.Dependencies = dependencies
+	newapp.EnvironmentVariables = envvariables
+	//Get dependencies
+
+	return newapp
 }

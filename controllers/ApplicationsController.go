@@ -104,13 +104,19 @@ func (c *ApplicationsController) CreateApplication(rw http.ResponseWriter, r *ht
 			envvarsstruct := make ([]models.EnvironmentVariable, len(environmentvariables))
 			fmt.Println(environmentvariables)
 
-			for i:=0; i< len(environmentvariables); i++ {
-				split := strings.Split(environmentvariables[i], ":")
-				envvarsstruct[i] = models.EnvironmentVariable{	Key: string(split[0]),
-																Value: string(split[1])}
+			if (len(environmentvariables) != 1) {
+				for i:=0; i< len(environmentvariables); i++ {
+					split := strings.Split(environmentvariables[i], ":")
+					envvarsstruct[i] = models.EnvironmentVariable{	Key: string(split[0]),
+																	Value: string(split[1])}
+				}
 			}
 
 			logo := r.FormValue("logo")
+			if logo == "" {
+				logo ="/images/noimage.png"
+			}
+
 			internalport := r.FormValue("internalport")
 			protocol := r.FormValue("protocol")
 			description := r.FormValue("description")
@@ -156,3 +162,42 @@ func (c *ApplicationsController) CreateApplication(rw http.ResponseWriter, r *ht
 		
 }
 
+func (c *ApplicationsController) ApplicationList(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+
+	if r.Method == "GET" {
+		applicationList := []models.Application{}
+
+		GetApplications(&applicationList)
+
+		for i:=0;i<len(applicationList);i++ {
+			applicationList[i].Username = getUserName(r)
+		}
+
+		if len(applicationList) == 0 {
+			applicationList = []models.Application{models.Application{Username: getUserName(r)}}	
+		}
+
+		//Display Application list page
+		c.HTML(rw, http.StatusOK, "apps/list", applicationList)
+
+	} else if r.Method == "POST" {
+
+		//Don't think this is needed but who knows :D
+	}
+}	
+
+func (c *ApplicationsController) Application(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+
+	if r.Method == "GET" {
+		application := GetApplicationByName(p.ByName("appID"))
+
+		application.Username = getUserName(r)
+
+		//Display Application list page
+		c.HTML(rw, http.StatusOK, "apps/application", application)
+
+	} else if r.Method == "POST" {
+
+		//Don't think this is needed but who knows :D
+	}
+}	

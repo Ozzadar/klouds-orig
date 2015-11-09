@@ -27,6 +27,12 @@ func (r *Routing) Init() {
             	fmt.Println(raw)
                 return template.HTML(raw)
             },
+            "add": func(x,y int) int {
+                return x + y
+            },
+            "mod": func(x,y int) int {
+                return x % y
+            },
         },
     },
     })
@@ -49,9 +55,11 @@ func (r *Routing) Init() {
 	r.Mux.POST("/user/profile", u.Profile)
 
 	//Application Pages
-	r.Mux.GET("/apps/admin", a.AppAdmin)
-	r.Mux.GET("/apps/admin/newapp", a.CreateApplication)
-	r.Mux.POST("/apps/admin/newapp", a.CreateApplication)
+	r.Mux.GET("/apps/list", a.ApplicationList)
+	r.Mux.GET("/apps/app/:appID", a.Application)
+	r.Mux.GET("/admin", a.AppAdmin)
+	r.Mux.GET("/admin/newapp", a.CreateApplication)
+	r.Mux.POST("/admin/newapp", a.CreateApplication)
 	
 	r.Mux.NotFound = http.FileServer(http.Dir("public"))
 }
