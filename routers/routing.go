@@ -57,6 +57,7 @@ func (r *Routing) Init() {
 	//Application Pages
 	r.Mux.GET("/apps/list", a.ApplicationList)
 	r.Mux.GET("/apps/app/:appID", a.Application)
+	r.Mux.POST("/apps/app/:appID/launch", a.Launch)
 	r.Mux.GET("/admin", a.AppAdmin)
 	r.Mux.GET("/admin/newapp", a.CreateApplication)
 	r.Mux.POST("/admin/newapp", a.CreateApplication)
