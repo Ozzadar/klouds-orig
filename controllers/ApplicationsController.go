@@ -290,7 +290,16 @@ func (c *ApplicationsController) Launch(rw http.ResponseWriter, r *http.Request,
 
 
 			//Add launched application to DB
+			runningapp := models.RunningApplication{
+					Name:	application.Name,
+					ApplicationID:	application.Id,
+					Owner:	models.UserApp{
+								UserID:	user.Id,
+							},
+					AccessUrl:	application.Name + "." + os.Getenv("KLOUDS_DOMAIN"),
+			}
 
+			AddRunningApplication(&runningapp)
 			//Display new application
 			application.Username = getUserName(r)
 

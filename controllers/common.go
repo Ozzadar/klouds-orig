@@ -118,6 +118,12 @@ func InitDB() {
     if !dbm.HasTable(&models.EnvironmentVariable{}){
         dbm.CreateTable(&models.EnvironmentVariable{})
     }
+    if !dbm.HasTable(&models.RunningApplication{}){
+        dbm.CreateTable(&models.RunningApplication{})
+    }   
+    if !dbm.HasTable(&models.UserApp{}){
+        dbm.CreateTable(&models.UserApp{})
+    }
 }
 
 
@@ -271,4 +277,12 @@ func RandString(strlen int) string {
 		result[i] = chars[rand.Intn(len(chars))]
 	}
 	return string(result)
+}
+
+/* USER APPLICATION THINGS */
+
+func AddRunningApplication(a *models.RunningApplication) {
+	fmt.Println("Adding running Application: " + a.Name)
+
+	db.Create(&a)
 }
