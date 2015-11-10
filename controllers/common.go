@@ -121,9 +121,6 @@ func InitDB() {
     if !dbm.HasTable(&models.RunningApplication{}){
         dbm.CreateTable(&models.RunningApplication{})
     }   
-    if !dbm.HasTable(&models.UserApp{}){
-        dbm.CreateTable(&models.UserApp{})
-    }
 }
 
 
@@ -285,4 +282,27 @@ func AddRunningApplication(a *models.RunningApplication) {
 	fmt.Println("Adding running Application: " + a.Name)
 
 	db.Create(&a)
+}
+
+
+func GetRunningApplications(a *[]models.RunningApplication) {
+
+	fmt.Println("Getting list of all running applications")
+
+	//Returns a list of all applications 
+	applicationList := []models.RunningApplication{}
+
+	db.Find(&applicationList)
+	//makes the list externally available
+	*a = applicationList
+
+}
+
+func GetRunningApplicationsForUser(a *[]models.RunningApplication, u *models.User) {
+
+	runningapps := []models.RunningApplication{}
+
+	db.Where("owner = ?", u.Id).Find(&runningapps)
+
+	*a = runningapps
 }

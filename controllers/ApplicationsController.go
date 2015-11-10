@@ -293,9 +293,7 @@ func (c *ApplicationsController) Launch(rw http.ResponseWriter, r *http.Request,
 			runningapp := models.RunningApplication{
 					Name:	application.Name,
 					ApplicationID:	application.Id,
-					Owner:	models.UserApp{
-								UserID:	user.Id,
-							},
+					Owner:	user.Id,
 					AccessUrl:	application.Name + "." + os.Getenv("KLOUDS_DOMAIN"),
 			}
 
