@@ -11,6 +11,7 @@ import (
     "unicode"
     "fmt"
     "math/rand"
+    "os"
 )
 
 type ErrorMessage struct {
@@ -92,7 +93,12 @@ func InitDB() {
 
 	fmt.Println("Initializing Database connection.")
 
-    dbm, err := gorm.Open("mysql", "root:thesecretsauce@(127.0.0.1:3306)/klouds?charset=utf8&parseTime=True")
+	mysqlhost := os.Getenv("MYSQL_HOST")
+	mysqluser := os.Getenv("MYSQL_USER")
+	mysqlpass := os.Getenv("MYSQL_PASSWORD")
+
+    dbm, err := gorm.Open("mysql", mysqluser+ ":" + mysqlpass + 
+    		"@(" + mysqlhost + ")/klouds?charset=utf8&parseTime=True")
 
     if(err != nil){
         panic("Unable to connect to the database")
