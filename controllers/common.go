@@ -304,5 +304,17 @@ func GetRunningApplicationsForUser(a *[]models.RunningApplication, u *models.Use
 
 	db.Where("owner = ?", u.Id).Find(&runningapps)
 
+	LoadLogoForRunningApplications(&runningapps)
 	*a = runningapps
+}
+
+func LoadLogoForRunningApplications(a *[]models.RunningApplication) {
+
+	for index := range *a {
+		application := models.Application{}
+
+		db.Where("id = ?", (*a)[index].ApplicationID).First(&application)
+
+		(*a)[index].Logo = application.Logo
+	}
 }
