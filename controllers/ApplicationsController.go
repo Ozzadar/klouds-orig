@@ -240,7 +240,13 @@ func (c *ApplicationsController) Launch(rw http.ResponseWriter, r *http.Request,
 			//make some custom things
 			envvariables := ""
 
+		
 			for i:=0; i< len(application.EnvironmentVariables); i++ {
+				if (application.EnvironmentVariables[i].Key == "") {
+					continue;
+				}
+				
+				fmt.Println("KEY: ", application.EnvironmentVariables[i].Key)
 				envvariables = envvariables + `"` + application.EnvironmentVariables[i].Key + `":"` +
 								application.EnvironmentVariables[i].Value + `"`
 

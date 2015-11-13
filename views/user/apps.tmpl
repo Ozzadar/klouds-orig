@@ -19,6 +19,7 @@
             {{if eq (mod $index 4) 0}}
                 <div class="row">
             {{end}}
+                {{if ne .Name ""}}
                     <div class="col-md-3 portfolio-item">
                     <table style="width:100%">
 	                    <tr>
@@ -31,6 +32,7 @@
 					</table>
 
                     </div>
+                 {{end}}
 
             {{if eq (mod $index 4) 3}}
                 </div>
