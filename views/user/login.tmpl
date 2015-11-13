@@ -12,7 +12,7 @@
 		 	<col width="40%">
   			<col width="20%">
 			<tr>
-				<form method="POST" action="/user/login">
+				<form method="GET" action="/user/register">
 				<td>
 			     	<label for="username">User name</label>
 			     </td><td>&nbsp;</td><td>
@@ -42,9 +42,9 @@
 				</form>
 			</tr>
 		</table>
-		
-		<button type="submit" value="Register" formaction="/user/register">Register</button>
-		
+		<form method="POST" action="/user/login">
+			<button type="submit" value="Register">Register</button>
+		</form>
 	</div>
 </div>
 
