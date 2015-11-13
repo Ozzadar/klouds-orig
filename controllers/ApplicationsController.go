@@ -243,7 +243,7 @@ func (c *ApplicationsController) Launch(rw http.ResponseWriter, r *http.Request,
 		
 			for i:=0; i< len(application.EnvironmentVariables); i++ {
 				if (application.EnvironmentVariables[i].Key == "") {
-					continue;
+					break;
 				}
 				
 				fmt.Println("KEY: ", application.EnvironmentVariables[i].Key)
