@@ -217,10 +217,13 @@ func (c *ApplicationsController) Launch(rw http.ResponseWriter, r *http.Request,
  			application := GetApplicationByName(p.ByName("appID"))
 			user = GetUserByUsername(getUserName(r))
 
+			/*  ADMINISTRATOR LOCK */
+			/*
 			if NotAdministrator(user, c, rw) {
 				return
 			}
-
+			*/
+			
 			//Read the JSON template
 			podfile, err := ioutil.ReadFile("public/json/template.json")
 
