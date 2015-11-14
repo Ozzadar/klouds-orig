@@ -126,7 +126,7 @@ func (c *ApplicationsController) CreateApplication(rw http.ResponseWriter, r *ht
 				split := strings.Split(environmentvariables[i], ":")
 				if len(envvarsstruct) >= 1 {
 					envvarsstruct[i] = models.EnvironmentVariable{}
-					for j:= -; j< len(split); j++ {
+					for j:= 0; j< len(split); j++ {
 						if j == 0 {
 							envvarsstruct[i].Key = split[j]
 						} else if j == 1 {
