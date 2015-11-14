@@ -186,7 +186,7 @@ func CheckForExistingEmail(u *models.User) bool {
 func CheckForMatchingPassword(u *models.User) bool {
 	newUser := &models.User{}
 
-	db.Where("email = ?", u.Email}).First(&newUser)
+	db.Where("email = ?", u.Email).First(&newUser)
 	fmt.Println(newUser)
 
 	return newUser.Password == u.Password
