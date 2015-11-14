@@ -27,6 +27,7 @@ func (c *ApplicationsController) AppAdmin(rw http.ResponseWriter, r *http.Reques
 		var user *models.User
 		
 
+
 		if getUserName(r) != "" || user != nil {
 			user = GetUserByUsername(getUserName(r))
 			
@@ -34,8 +35,20 @@ func (c *ApplicationsController) AppAdmin(rw http.ResponseWriter, r *http.Reques
 				return
 			}
 
+					//Get application list for user
+			runningapps := []models.RunningApplication{}
 
-			c.HTML(rw, http.StatusOK, "apps/admin/admin", user)
+			GetRunningApplications(&runningapps)
+
+			for i:=0; i<len(runningapps);i++ {
+				runningapps[i].Username = user.Username
+			}
+
+			if len(runningapps) == 0 {
+				runningapps = []models.RunningApplication{models.RunningApplication{Username: user.Username}}	
+			}
+
+			c.HTML(rw, http.StatusOK, "apps/admin/admin", runningapps)
 			
 		} else {
 

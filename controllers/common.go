@@ -299,6 +299,7 @@ func GetRunningApplications(a *[]models.RunningApplication) {
 	applicationList := []models.RunningApplication{}
 
 	db.Find(&applicationList)
+	LoadLogoForRunningApplications(&applicationList)
 	//makes the list externally available
 	*a = applicationList
 
@@ -310,7 +311,7 @@ func GetRunningApplicationsForUser(a *[]models.RunningApplication, u *models.Use
 
 	db.Where("owner = ?", u.Id).Find(&runningapps)
 
-	LoadLogoForRunningApplications(&runningapps)
+	
 	*a = runningapps
 }
 
