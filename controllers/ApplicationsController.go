@@ -125,9 +125,19 @@ func (c *ApplicationsController) CreateApplication(rw http.ResponseWriter, r *ht
 			for i:=0; i < len(environmentvariables); i++ {
 				split := strings.Split(environmentvariables[i], ":")
 				if len(envvarsstruct) >= 1 {
-					envvarsstruct[i] = models.EnvironmentVariable{	Key: string(split[0]),
-																Value: string(split[1])}
+					envvarsstruct[i] = models.EnvironmentVariable{}
+					for j:= -; j< len(split); j++ {
+						if j == 0 {
+							envvarsstruct[i].Key = split[j]
+						} else if j == 1 {
+							envvarsstruct[i].Value = split[j]
+						} else {
+							envvarsstruct[i].Value = envvarsstruct[i].Value + ":" + split[j]
+						}
+					}
+					
 				}
+
 			}
 
 			logo := r.FormValue("logo")
