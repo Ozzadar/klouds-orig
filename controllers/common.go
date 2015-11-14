@@ -312,7 +312,7 @@ func GetRunningApplicationsForUser(a *[]models.RunningApplication, u *models.Use
 
 	db.Where("owner = ?", u.Id).Find(&runningapps)
 
-	LoadLogoForRunningApplications(&applicationList)
+	LoadLogoForRunningApplications(&runningapps)
 	
 	*a = runningapps
 }
