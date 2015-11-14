@@ -114,8 +114,9 @@ func (c *ApplicationsController) CreateApplication(rw http.ResponseWriter, r *ht
 			envvars := r.FormValue("environmentvariables")
 			environmentvariables := strings.Split(envvars,",")
 
-			//remove white space
+			//Strips white space
 			for i:=0; i< len(environmentvariables); i++ {
+				environmentvariables[i] = stripSpaces(environmentvariables[i])
 			}
 
 			//Create structure array
@@ -126,6 +127,7 @@ func (c *ApplicationsController) CreateApplication(rw http.ResponseWriter, r *ht
 				split := strings.Split(environmentvariables[i], ":")
 				if len(envvarsstruct) >= 1 {
 					envvarsstruct[i] = models.EnvironmentVariable{}
+
 					for j:= 0; j< len(split); j++ {
 						if j == 0 {
 							envvarsstruct[i].Key = split[j]
