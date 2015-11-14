@@ -187,6 +187,7 @@ func CheckForMatchingPassword(u *models.User) bool {
 	newUser := &models.User{}
 
 	db.Where(&models.User{Email: u.Email}).First(&newUser)
+	fmt.Println(newUser)
 
 	return newUser.Password == u.Password
 } 
@@ -311,6 +312,7 @@ func GetRunningApplicationsForUser(a *[]models.RunningApplication, u *models.Use
 
 	db.Where("owner = ?", u.Id).Find(&runningapps)
 
+	LoadLogoForRunningApplications(&applicationList)
 	
 	*a = runningapps
 }
