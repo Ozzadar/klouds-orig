@@ -10,6 +10,9 @@ import (
 	"io/ioutil"
 	"bytes"
 	"os"
+	"encoding/json"
+	"time"
+	"strconv"
 )
 
 type ApplicationsController struct {
@@ -249,7 +252,6 @@ func (c *ApplicationsController) Launch(rw http.ResponseWriter, r *http.Request,
 					break;
 				}
 				
-				fmt.Println("KEY: ", application.EnvironmentVariables[i].Key)
 				envvariables = envvariables + `"` + application.EnvironmentVariables[i].Key + `":"` +
 								application.EnvironmentVariables[i].Value + `"`
 
@@ -279,7 +281,6 @@ func (c *ApplicationsController) Launch(rw http.ResponseWriter, r *http.Request,
 							SplitAtHTTP[0] + ishttp + SplitAtRoutingName[0] + application.Name + 
 							SplitAtRoutingName[1]	
 			
-			fmt.Println(newstring)
 			//Launch against marathon
 			//Create the request
 			url := "http://" + os.Getenv("MARATHON_ENDPOINT") + "/v2/apps/"
@@ -298,22 +299,98 @@ func (c *ApplicationsController) Launch(rw http.ResponseWriter, r *http.Request,
 			}
 
 
+
+
+
+
+
+
 			//Add launched application to DB
 			runningapp := models.RunningApplication{
 					Name:	application.Name,
 					ApplicationID:	application.Id,
 					Owner:	user.Id,
-					AccessUrl:	application.Name + "." + os.Getenv("KLOUDS_DOMAIN"),
+					AccessUrl:	strings.ToLower(application.Protocol),
+					IsRunning:	false,
 			}
 
 			AddRunningApplication(&runningapp)
 			//Display new application
 			application.Username = getUserName(r)
+			go pollRunningApplication(application.Name)
 
-			c.HTML(rw, http.StatusOK, "apps/launch", application)
+			c.HTML(rw, http.StatusOK, "apps/launched", application)
 			
 		} else {
 			c.HTML(rw, http.StatusOK, "user/login", nil)
 		}
 	}
 }	
+
+func pollRunningApplication(name string) {
+
+		running := false
+
+		url := "http://" + os.Getenv("MARATHON_ENDPOINT") + "/v2/apps/" + name
+
+
+		for !running {
+			fmt.Println("Checking if application " + name + "is running yet.")
+			
+			time.Sleep(2 * time.Second)
+
+			req, err := http.NewRequest("GET", url, nil)
+
+			//Make the request
+			res, err := http.DefaultClient.Do(req)
+
+			if err != nil {
+		    	panic(err) //Something is wrong while sending request
+		 	}
+
+			if res.StatusCode != 201 {
+				fmt.Printf("Success expected: %d", res.StatusCode) //Uh-oh this means our test failed
+			}
+
+
+			marathonapp := models.MarathonApplication{}
+
+
+			body,err := ioutil.ReadAll(res.Body)
+			if err != nil {
+		    	panic(err) //Something is wrong while sending request
+		 	}
+
+			err = json.Unmarshal(body, &marathonapp)
+
+
+			if err != nil {			
+				
+				panic(err)
+				return
+			}
+
+			if (marathonapp.App.TasksRunning != 0) {
+				running = true
+				fmt.Println("Application " + name + "is now running and accessible.")
+				application := models.RunningApplication{}
+				application = *(GetRunningApplicationByName(name))
+
+				application.IsRunning = true
+				application.HostIP = marathonapp.App.Tasks[0].Host
+				application.HostPort = marathonapp.App.Tasks[0].Ports[0]
+				application.ServicePort = marathonapp.App.Ports[0]
+
+				if application.AccessUrl == "http" {
+					application.AccessUrl = application.Name + "." + os.Getenv("KLOUDS_DOMAIN")
+				} else if application.AccessUrl == "tcp" {
+					application.AccessUrl = application.Name + "." + os.Getenv("KLOUDS_DOMAIN") + ":" +
+						strconv.Itoa(application.ServicePort)
+				} else {
+					application.AccessUrl = application.HostIP + ":" + strconv.Itoa(application.HostPort)			
+						}
+
+				UpdateRunningApplication(&application)
+			}
+		}
+}

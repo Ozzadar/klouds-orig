@@ -110,7 +110,7 @@ func InitDB() {
     dbm.DB().Ping()
     dbm.DB().SetMaxIdleConns(10)
     dbm.DB().SetMaxOpenConns(100)
-    db.LogMode(true)
+    db.LogMode(false)
  
     if !dbm.HasTable(&models.User{}){
         dbm.CreateTable(&models.User{})
@@ -323,4 +323,16 @@ func LoadLogoForRunningApplications(a *[]models.RunningApplication) {
 
 		(*a)[index].Logo = application.Logo
 	}
+}
+
+func GetRunningApplicationByName(name string) *models.RunningApplication{
+	application := models.RunningApplication{}
+
+	db.Where("name = ?", name).First(&application)
+
+	return &application
+}
+
+func UpdateRunningApplication(a *models.RunningApplication) {
+	db.Save(&a)
 }

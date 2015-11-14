@@ -25,7 +25,11 @@
 	                    <tr>
 							<td>
 							{{.Name}}<br>
-	                        <a target="_blank" href="http://{{.AccessUrl}}">Access Here!</a><br>
+                            {{if eq .IsRunning true}}
+	                        <a href="http://{{.AccessUrl}}">Access Here!</a><br>
+                            {{else}}
+                            <a href="#">Application Still Launching!</a><br>
+                            {{end}}
 	                        </td>
 							<td style="text-align:right"><img style="width:100px; height:100px;" src="{{.Logo}}" alt="Logo not found"/></td>
 						</tr>
