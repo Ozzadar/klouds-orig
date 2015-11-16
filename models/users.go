@@ -120,14 +120,12 @@ func VerifyPassword(s string) (tenOrMore, number, upper, special bool) {
     letters := 0
     for _, s := range s {
         switch {
-        case unicode.IsNumber(s):
-            number = true
         case unicode.IsUpper(s):
             upper = true
             letters++
         case unicode.IsPunct(s) || unicode.IsSymbol(s):
             special = true
-        case unicode.IsLetter(s) || s == ' ':
+        case unicode.IsLetter(s) || unicode.IsNumber(s):
             letters++
         default:
             //return false, false, false, false
