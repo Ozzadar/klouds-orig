@@ -1,4 +1,4 @@
-    {{template "header" .User}}
+    {{template "apps/header" .User}}
 
     <div class="container">
 
@@ -13,17 +13,9 @@
                 <span class="text-muted"></span>
       
                 </h2>
-                <p class="lead">{{.Description}}</p>
-                <p class="lead">Docker Image: {{.DockerImage}}<br>
-                    Dependencies:  {{range .Dependencies}}
-                        {{.Dependency}} <br>
-                    {{end}}
-                    Environment Variables: {{range .EnvironmentVariables}}
-                        {{.Key}}:{{.Value}} <br>
-                    {{end}}<br>
-                    Internal Port :  {{.InternalPort}} <br>
-                    Protocol: {{.Protocol}}
-                    </p>
+                Application {{.Name}} has been shutdown and deleted.<br>
+                Redirecting back to applications in 5 seconds.
+                <META HTTP-EQUIV=REFRESH CONTENT="5; URL=/user/apps">.
             {{else}}
                 Application Not Found!
                 </h2>

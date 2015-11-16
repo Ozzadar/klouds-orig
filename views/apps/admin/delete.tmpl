@@ -6,7 +6,7 @@
 
         <!-- First Featurette -->
         <div class="featurette">
-            <img class="featurette-image img-circle img-responsive pull-right" src="{{.Logo}}">
+            <img class="featurette-image img-circle img-responsive pull-right" width="350px" src="{{.Logo}}">
             <h2 class="featurette-heading">
             {{if .Name}}
                 {{.Name}}
@@ -24,6 +24,18 @@
                     Internal Port :  {{.InternalPort}} <br>
                     Protocol: {{.Protocol}}
                     </p>
+                    
+                    
+                    <h2><font color="red"> Are you sure you want to delete the application? <br>
+                    <small> This will also remove all running instances of the application! <br>
+                    <small> this process is irreversible </small></font></h2>
+                    {{if eq .User.Role "admin"}}
+                        <p>
+                            <form action="/apps/app/{{.Name}}/delete" method="post" id="deletebutton">
+                                <button type="submit" class="btn btn-danger"form="deletebutton" value="Submit">Delete Application</button><br>
+                            </form>
+                        </p>
+                    {{end}}
             {{else}}
                 Application Not Found!
                 </h2>

@@ -97,7 +97,8 @@ func (c *UserController) Login(rw http.ResponseWriter, r *http.Request, p httpro
 		newUser.ValidateLogin()
 
 		if (newUser.Message != "") {
-
+			newUser.Username = ""
+			
 			c.HTML(rw, http.StatusOK, "user/login", newUser)
 			return;
 		}
@@ -216,11 +217,11 @@ func (c *UserController) ApplicationList(rw http.ResponseWriter, r *http.Request
 		GetRunningApplicationsForUser(&runningapps, user)
 
 		for i:=0; i<len(runningapps);i++ {
-			runningapps[i].Username = user.Username
+			runningapps[i].User = *user
 		}
 
 		if len(runningapps) == 0 {
-			runningapps = []models.RunningApplication{models.RunningApplication{Username: user.Username}}	
+			runningapps = []models.RunningApplication{models.RunningApplication{User: *user}}	
 		}
 		//pass the application list to the page
 		c.HTML(rw, http.StatusOK, "user/apps", runningapps)
@@ -240,3 +241,38 @@ func RedirectToLogin(c *UserController, rw http.ResponseWriter, r *http.Request,
 			c.HTML(rw, http.StatusOK, "user/login", nil)
 		}
 }
+
+func (c *UserController) DeleteApplication(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		
+	if r.Method == "GET"{
+		var user *models.User
+
+		if getUserName(r) == "" {
+			c.HTML(rw, http.StatusOK, "user/login", nil)
+			return
+		} 
+		
+		user = GetUserByUsername(getUserName(r))
+
+		//Get application list for user
+		runningapp := GetRunningApplicationByName(p.ByName("appID"))
+
+		if DeleteRunningApplication(user.Username, runningapp.Name) {
+
+			runningapp.User = *user
+			
+
+			if runningapp.Name == "" {
+				runningapp = &models.RunningApplication{User: *user}	
+			}
+			//pass the application list to the page
+			c.HTML(rw, http.StatusOK, "user/deleteapp", runningapp)
+		} else {
+			runningapp = &models.RunningApplication{User: *user}
+			runningapp.Message = "You do not own this application."
+
+			c.HTML(rw, http.StatusOK, "user/login", runningapp)
+		}
+	}
+}
+

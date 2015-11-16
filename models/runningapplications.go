@@ -11,6 +11,6 @@ type RunningApplication struct {
   HostPort					int
   ServicePort				int 
     Logo            		string          		`sql:"-"`
-  	Username				string					`sql:"-"`
+  	User					User					`sql:"-"`
   	Message					string 					`sql:"-"`	//These dont get put in the database
 }

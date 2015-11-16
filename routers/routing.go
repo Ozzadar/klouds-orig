@@ -47,6 +47,7 @@ func (r *Routing) Init() {
 	//User Pages
 	r.Mux.GET("/user", u.Login)
 	r.Mux.GET("/user/apps", u.ApplicationList)
+	r.Mux.GET("/user/apps/deleteapp/:appID", u.DeleteApplication)
 	r.Mux.POST("/user/register", u.Register)
 	r.Mux.GET("/user/register", u.Register)
 	r.Mux.POST("/user/logout", u.Logout)
@@ -61,6 +62,10 @@ func (r *Routing) Init() {
 	r.Mux.GET("/apps/app/:appID", a.Application)
 	r.Mux.POST("/apps/app/:appID/launch", a.Launch)
 	r.Mux.GET("/admin", a.AppAdmin)
+	r.Mux.GET("/apps/app/:appID/delete", a.DeleteApplication)
+	r.Mux.POST("/apps/app/:appID/delete", a.DeleteApplication)
+	r.Mux.GET("/apps/app/:appID/edit", a.EditApplication)
+	r.Mux.POST("/apps/app/:appID/edit", a.EditApplication)
 	r.Mux.GET("/admin/newapp", a.CreateApplication)
 	r.Mux.POST("/admin/newapp", a.CreateApplication)
 	

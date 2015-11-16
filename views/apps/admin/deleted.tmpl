@@ -6,7 +6,7 @@
 
         <!-- First Featurette -->
         <div class="featurette">
-            <img class="featurette-image img-circle img-responsive pull-right" src="{{.Logo}}">
+            <img class="featurette-image img-circle img-responsive pull-right" width="350px" src="{{.Logo}}">
             <h2 class="featurette-heading">
             {{if .Name}}
                 {{.Name}}
@@ -24,6 +24,10 @@
                     Internal Port :  {{.InternalPort}} <br>
                     Protocol: {{.Protocol}}
                     </p>
+                    
+                    
+                    <h2><font color="red"> THIS APPLICATION HAS BEEN DELETED <br></font></h2>
+                     <META HTTP-EQUIV=REFRESH CONTENT="1; URL=/apps">
             {{else}}
                 Application Not Found!
                 </h2>

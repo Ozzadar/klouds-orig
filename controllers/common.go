@@ -12,6 +12,8 @@ import (
     "fmt"
     "math/rand"
     "os"
+    "encoding/json"
+    "io/ioutil"
 )
 
 type ErrorMessage struct {
@@ -225,8 +227,44 @@ func CheckApplicationExists(appname string) bool {
 //Create application in DB
 func CreateApplication(a *models.Application) {
 	fmt.Println("Creating Application: " + a.Name)
-
 	db.Create(&a)
+
+}
+
+func UpdateApplication(a *models.Application) {
+	fmt.Println("Updating Application: " + a.Name)
+	db.Save(&a)
+}
+
+func DeleteApplication(a *models.Application, username string) {
+	fmt.Println("Deleting Application: " + a.Name + " and all running instances")
+
+	user := GetUserByUsername(username)
+	
+	if (user.Role == "admin") {
+		//Get all running instances
+		runningapps := []models.RunningApplication{}
+		
+
+		db.Where("application_id = ?", a.Id).Find(&runningapps)
+		fmt.Println("running apps: ", runningapps)
+
+		for _, element := range runningapps {
+			DeleteRunningApplication(username, element.Name)
+		}
+
+		//Delete all dependencies
+		dependency := models.Dependency{}
+		db.Where("application_id = ?", a.Id).Delete(&dependency)
+
+		//Delete all environment variables
+		envars := []models.EnvironmentVariable{}
+		db.Where("application_id = ?", a.Id).Delete(&envars)
+
+		//Finally, delete the application
+		db.Delete(&a)
+	
+	}
 
 }
 
@@ -338,4 +376,95 @@ func GetRunningApplicationByName(name string) *models.RunningApplication{
 
 func UpdateRunningApplication(a *models.RunningApplication) {
 	db.Save(&a)
+}
+
+func DeleteRunningApplication(username, name string) bool{
+
+	user := GetUserByUsername(username)
+	application := GetRunningApplicationByName(name)
+
+
+	if (user.Id == application.Owner || user.Role == "admin") {
+		//mark as not running
+		application.IsRunning = false
+		UpdateRunningApplication(application)
+
+		//remove from marathon
+		url := "http://" + os.Getenv("MARATHON_ENDPOINT") + "/v2/apps/" + name
+
+		req, err := http.NewRequest("DELETE", url, nil)
+
+		//Make the request
+		res, err := http.DefaultClient.Do(req)
+
+		if err != nil {
+			panic(err) //Something is wrong while sending request
+			}
+
+		if res.StatusCode != 201 {
+			fmt.Printf("Success expected: %d", res.StatusCode) //Uh-oh this means our test failed
+		}
+
+		//Check if app is still running
+		running := false
+
+		for running {
+			//if app is still running, don't do anything yet
+			running, _ = CheckMarathonForRunningStatus(name)
+		}
+
+		//app isn't running, remove from database
+		db.Delete(&application)
+
+		return true
+	} else {
+		return false
+	}
+}
+
+func CheckMarathonForRunningStatus(name string) (running bool, application models.MarathonApplication) {
+
+	running =false
+	url := "http://" + os.Getenv("MARATHON_ENDPOINT") + "/v2/apps/" + name
+	fmt.Println("Checking if application " + name + "is running yet.")
+	
+	time.Sleep(2 * time.Second)
+
+	req, err := http.NewRequest("GET", url, nil)
+
+	//Make the request
+	res, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+    	panic(err) //Something is wrong while sending request
+ 	}
+
+	if res.StatusCode != 201 {
+		fmt.Printf("Success expected: %d", res.StatusCode) //Uh-oh this means our test failed
+	}
+
+
+	marathonapp := models.MarathonApplication{}
+
+
+	body,err := ioutil.ReadAll(res.Body)
+	if err != nil {
+    	panic(err) //Something is wrong while sending request
+ 	}
+
+	err = json.Unmarshal(body, &marathonapp)
+
+
+	if err != nil {			
+		
+		panic(err)
+		return
+	}
+
+	if (marathonapp.App.TasksRunning != 0) {
+		running = true
+	}
+	application = marathonapp
+
+	return 
 }
