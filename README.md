@@ -16,7 +16,7 @@ Uses rest APIs to manage containers. Uses wercker to automate deployment.  (mayb
 
 ##THE STACK
 
-```
+
 
 mesos-slave/consul --\   /--------------------------------------> haproxy-consul  <---\
 			   		  \	/															   \
@@ -24,7 +24,7 @@ mesos-slave/consul ---->mesos-master ->- marathon endpoint --><-- klouds-fronten
 			   		  /	\					    v
 mesos-slave/consul __/	 \______<_______ marathon-consul
 
-```
+
 
 
 ##HOW TO USE:
