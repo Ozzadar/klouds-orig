@@ -4,7 +4,7 @@ import (
 	"net/http"
  	_ "github.com/go-sql-driver/mysql"
     "github.com/jinzhu/gorm"
-    "github.com/superordinate/klouds2.0/models"
+    "github.com/superordinate/klouds/models"
     "github.com/gorilla/securecookie"
     "time"
     "strings"

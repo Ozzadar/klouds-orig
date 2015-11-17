@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"gopkg.in/unrolled/render.v1"
 	"github.com/julienschmidt/httprouter"
-	"github.com/superordinate/klouds2.0/controllers"
+	"github.com/superordinate/klouds/controllers"
 	"fmt"
 )
 

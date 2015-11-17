@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"net/http"
-	"github.com/superordinate/klouds2.0/models"
+	"github.com/superordinate/klouds/models"
 	"gopkg.in/unrolled/render.v1"
 	"github.com/julienschmidt/httprouter"
 
