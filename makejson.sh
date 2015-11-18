@@ -29,6 +29,6 @@ cat > klouds-ui.json <<EOF
       "portIndex": 0,
       "timeoutSeconds": 10,
       "maxConsecutiveFailures": 2
-  }].
+  }]
 }
 EOF
