@@ -16,7 +16,7 @@
           }
         ],
         "privileged": true,
-        "forcePullImage": false
+        "forcePullImage": true
       }
     },
     "env": {
