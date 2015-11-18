@@ -31,11 +31,11 @@ mesos-slave/consul __/	 \______<_______ marathon-consul
 
 ###Environment Variables
 
-MARATHON_ENDPOINT= 192.168.3.4:8080  	<-- Point this to your own marathon backend
-KLOUDS_DOMAIN=klouds.org 				<-- Creates application access urls to point to your domain
-MYSQL_HOST= 127.0.0.1:3306	 			<-- Points to your database
-MYSQL_USER= root						<-- User for your mysql database
-MYSQL_PASSWORD= iamapassword			<-- password for you mysql user
+MARATHON_ENDPOINT= 192.168.3.4:8080  	<-- Point this to your own marathon backend<br>
+KLOUDS_DOMAIN=klouds.org 				<-- Creates application access urls to point to your <br>domain<br>
+MYSQL_HOST= 127.0.0.1:3306	 			<-- Points to your database<br>
+MYSQL_USER= root						<-- User for your mysql database<br>
+MYSQL_PASSWORD= iamapassword			<-- password for you mysql user<br>
 
 
 ###To build (linux):
