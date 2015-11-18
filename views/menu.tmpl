@@ -23,7 +23,7 @@
         <div class="navbar-collapse collapse" id="main-navigation">
             <ul class="nav navbar-nav navbar-right main-navigation">
                 <li><a href="/">Home</a></li>
-                <li><a href="/#features">Features</a></li>
+                <li><a href="/apps">Applications</a></li>
                 <li><a href="/#app1">Why Us?</a></li>
                 <li><a href="/#app2">Desicribe</a></li>
                 <li><a href="/#services">Services</a></li>
@@ -35,12 +35,11 @@
                 <li><a data-toggle="modal" data-target="#registerForm" href="/user/register">Register</a></li>
                 {{end}}
                 {{if .Username }}
-                <li>
-                    <a href="/admin">Admin</a>
-                </li>
-                <li>
-                    <a href="/apps">Applications</a>
-                </li>
+                    {{if eq .Role "admin"}}
+                        <li>
+                            <a href="/admin">Admin</a>
+                        </li>
+                    {{end}}
                 {{end}}
             </ul>
         </div>

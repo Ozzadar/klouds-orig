@@ -135,7 +135,7 @@ func InitDB() {
 /* HELPER FUNCTIONS */
 
 //Checks if user is admin and redirects to login page if s/he isn't
-func NotAdministrator(user *models.User, c *ApplicationsController, rw http.ResponseWriter) bool {
+func NotAdministrator(user *models.User, c *AdminController, rw http.ResponseWriter) bool {
 
 	if user.Role != "admin"{
 		user.Message = "You are not an administrator."

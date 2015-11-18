@@ -7,22 +7,28 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">Application List
-                    <small>Look at all the things!</small>
+                    
                 </h1>
             </div>
         </div>
         <!-- /.row -->
 
-        <!-- Projects Row -->
+        <!-- Projects Row -->                    
          
         {{range $index, $element := .}}
             {{if eq (mod $index 4) 0}}
                 <div class="row">
             {{end}}
                     <div class="col-md-3 portfolio-item">
-                        <a href="/apps/app/{{.Name}}">
-                            <img class="img-responsive" style="width:300px; height:250px;" src="{{.Logo}}" alt="{{.Name}}">
-                        </a>
+                    <table style="width:100%; height:300px;">
+
+                        <tr>
+                            <td>
+                                <a href="/apps/app/{{.Name}}"><img class="img-responsive" src="{{.Logo}}" alt="{{.Name}}"/></a>
+                            </td>
+                        </tr>
+                    </table>
+
                     </div>
 
             {{if eq (mod $index 4) 3}}

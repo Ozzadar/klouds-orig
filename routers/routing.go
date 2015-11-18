@@ -41,7 +41,7 @@ func (r *Routing) Init() {
 	c := &controllers.SiteNavController{Render: r.Render}
 	u := &controllers.UserController{Render: r.Render}
 	a := &controllers.ApplicationsController{Render: r.Render}
-	
+	ad := &controllers.AdminController{Render: r.Render}
 	r.Mux.GET("/", c.Index)
 
 	//User Pages
@@ -61,13 +61,15 @@ func (r *Routing) Init() {
 	r.Mux.GET("/apps/", a.ApplicationList)
 	r.Mux.GET("/apps/app/:appID", a.Application)
 	r.Mux.POST("/apps/app/:appID/launch", a.Launch)
-	r.Mux.GET("/admin", a.AppAdmin)
-	r.Mux.GET("/apps/app/:appID/delete", a.DeleteApplication)
-	r.Mux.POST("/apps/app/:appID/delete", a.DeleteApplication)
-	r.Mux.GET("/apps/app/:appID/edit", a.EditApplication)
-	r.Mux.POST("/apps/app/:appID/edit", a.EditApplication)
-	r.Mux.GET("/admin/newapp", a.CreateApplication)
-	r.Mux.POST("/admin/newapp", a.CreateApplication)
+
+
+	r.Mux.GET("/admin", ad.AppAdmin)
+	r.Mux.GET("/apps/app/:appID/delete", ad.DeleteApplication)
+	r.Mux.POST("/apps/app/:appID/delete", ad.DeleteApplication)
+	r.Mux.GET("/apps/app/:appID/edit", ad.EditApplication)
+	r.Mux.POST("/apps/app/:appID/edit", ad.EditApplication)
+	r.Mux.GET("/admin/newapp", ad.CreateApplication)
+	r.Mux.POST("/admin/newapp", ad.CreateApplication)
 	
 	r.Mux.NotFound = http.FileServer(http.Dir("public"))
 }

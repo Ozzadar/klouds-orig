@@ -44,7 +44,7 @@ func (u *User) ValidateRegister() {
 
 		tenOrMore, _, _, _ := VerifyPassword(u.Password)
 		if (!(tenOrMore)) {
-			errorstring = errorstring + "Password must be at least 10 characters long"
+			errorstring = errorstring + "Password must be at least 10 characters long. Letters and numbers only."
 		}
 
 		if (u.Password != u.ConfirmPassword) {
@@ -65,7 +65,7 @@ func (u *User) ValidateLogin() {
 
 	tenOrMore, _, _, _ := VerifyPassword(u.Password)
 	if (!(tenOrMore)) {
-		errorstring = errorstring + "Password must be at least 10 characters long"
+		errorstring = errorstring + "Password must be at least 10 characters long. Letters and numbers only."
 	}
 
 	u.Message = errorstring
